@@ -15,7 +15,7 @@ und lokal gespeicherten Lernnotizen.
 
 ## Windows-Download
 
-Lade `Anatomie Lernseite-Setup-1.0.0.exe` aus den Release-Assets herunter und
+Lade `Anatomie-Lernseite-Setup-1.0.0.exe` aus den Release-Assets herunter und
 starte den Installer. Blender muss auf dem Zielrechner nicht installiert sein.
 
 **Hinweis:** Diese Installer-Datei ist nicht mit einem Authenticode-Zertifikat
@@ -23,7 +23,8 @@ signiert. Windows kann deshalb vor dem Start eine Herausgeber-Warnung anzeigen.
 
 ## Webversion
 
-Die Anwendung ist über GitHub Pages verfügbar. Das Release enthält außerdem
+Die [Webversion](https://Seven64.github.io/anatomie-lernseite/) ist über GitHub
+Pages verfügbar. Das Release enthält außerdem
 `Anatomie-Lernseite-Web-1.0.0.zip` für eigenes Hosting.
 
 ## Lizenzen
