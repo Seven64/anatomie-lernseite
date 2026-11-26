@@ -191,12 +191,12 @@ export class FlashcardMode {
     const updated = applySm2(previous, rating);
     this.progressById.set(structure.id, updated);
     this.progressData!.flashcardProgress = [...this.progressById.values()];
+    void this.dataManager.updateProgress(progress => {
+      progress.flashcardProgress = progress.flashcardProgress.filter(card => card.structureId !== structure.id);
+      progress.flashcardProgress.push(updated);
+    }).catch(error => console.error("Failed to save flashcard progress:", error));
 
     this.reviewedToday++;
-    this.progressData!.lastUpdated = new Date().toISOString();
-    void this.dataManager.saveProgress(this.progressData!).catch(error =>
-      console.error("Failed to save flashcard progress:", error)
-    );
 
     this.currentIndex++;
     this.showCard();

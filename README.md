@@ -108,9 +108,12 @@ npm run dev
   Schnittebenen-Mathematik, Schichtzuordnung, Strukturbaum-Gruppierung und die Konsistenz von
   `public/structures.json` (Version, eindeutige IDs, vorhandene GLB-Dateien).
 - **CI** (`.github/workflows/ci.yml`) läuft bei jedem Push auf `main` und jedem Pull Request:
-  Typecheck, Tests, Daten-Check, Build und ein Docker-Image inklusive Smoke-Test.
+  Typecheck, Tests, Daten-Check, Build, Docker-Image inklusive Smoke-Test und ein
+  Probe-Build des Windows-Installers (als Artefakt herunterladbar).
 - **Pages** (`deploy-pages.yml`) veröffentlicht `main` nach erfolgreichem `npm run check`.
-- **Release** (`release.yml`) – siehe [docs/RELEASE.md](docs/RELEASE.md).
+- **Release** (`release.yml`) erkennt die Version aus `package.json` auf `main` und
+  veröffentlicht neue Versionen automatisch mit Windows-Installer (`.exe`) und Web-ZIP –
+  siehe [docs/RELEASE.md](docs/RELEASE.md).
 
 ### Windows-Desktop-Installer
 

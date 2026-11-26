@@ -17,6 +17,7 @@ export class LabelQuizMode {
   private answered = false;
   private viewer: PreviewViewer | null = null;
   private nextTimer: ReturnType<typeof setTimeout> | null = null;
+  private questionShownAt = 0;
 
   constructor(dataManager: DataManager, settingsManager: SettingsManager) {
     this.dataManager = dataManager;
@@ -98,6 +99,7 @@ export class LabelQuizMode {
       return this.nextQuestion(attempt + 1);
     }
     this.total++;
+    this.questionShownAt = performance.now();
     this.updateProgress();
   }
 
@@ -116,6 +118,18 @@ export class LabelQuizMode {
     }
   }
 
+  /** Ergebnis im Lernfortschritt speichern (zählt wie „Wie heißt …?“). */
+  private async recordResult(structure: Structure, correct: boolean): Promise<void> {
+    const responseTime = Math.round(performance.now() - this.questionShownAt);
+    try {
+      await this.dataManager.updateProgress(progress => {
+        progress.quizResults.push({ structureId: structure.id, mode: "identify", correct, timestamp: new Date().toISOString(), responseTime });
+      });
+    } catch (error) {
+      console.error("Failed to save label quiz result:", error);
+    }
+  }
+
   private checkAnswer(): void {
     const structure = this.currentStructure;
     const input = document.getElementById("answer-input") as HTMLInputElement;
@@ -125,6 +139,7 @@ export class LabelQuizMode {
     const isCorrect = fuzzyMatch(input.value, names.map(structureBaseName));
     this.answered = true;
     this.score += isCorrect ? 1 : 0;
+    void this.recordResult(structure, isCorrect);
     this.showFeedback(isCorrect, this.settingsManager.getLabel(structure));
     this.updateProgress();
     if (this.nextTimer) clearTimeout(this.nextTimer);
@@ -141,7 +156,7 @@ export class LabelQuizMode {
       <span class="${correct ? "feedback-correct" : "feedback-incorrect"}">
         ${correct ? "✓ Richtig!" : "✗ Falsch"}
       </span>
-      <span class="feedback-detail">Richtige Antwort: ${escapeHtml(correctName)}</span>
+      <span class="feedback-detail">${correct ? escapeHtml(correctName) : `Richtige Antwort: ${escapeHtml(correctName)}`}</span>
     `;
   }
 
