@@ -105,7 +105,7 @@
 .select:focus, .search-input:focus, .textarea:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-primary)33;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 20%, transparent);
 }
 
 .select option {

@@ -65,8 +65,8 @@
     bottom: 0;
     right: 0;
     left: 0;
-    height: 60vh;
-    max-height: 60vh;
+    height: 45vh;
+    max-height: 45vh;
     border-left: none;
     border-top: 1px solid var(--border);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
@@ -75,6 +75,11 @@
 
   .info-panel.open {
     transform: translateY(0);
+  }
+
+  /* Bottom-Sheet: ViewCube bleibt oben rechts. */
+  .app-layout:has(.info-panel.open) .viewcube {
+    right: var(--spacing-3);
   }
 
   .header-search input {
