@@ -28,6 +28,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - name: Typecheck, tests and data check
+        run: npm run check
       - name: Build website
         run: npm run build
       - name: Configure GitHub Pages

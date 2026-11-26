@@ -1,0 +1,111 @@
+/* ---------------------------------------------------------------------------
+   Profile Stats
+   --------------------------------------------------------------------------- */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-3);
+}
+
+.profile-stat {
+  text-align: center;
+  padding: var(--spacing-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.profile-stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--fg-muted);
+  margin-top: var(--spacing-1);
+}
+
+/* ---------------------------------------------------------------------------
+   Structure Info
+   --------------------------------------------------------------------------- */
+.structure-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.structure-names {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.structure-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+}
+
+.structure-name-label {
+  font-size: var(--font-size-sm);
+  color: var(--fg-muted);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.structure-name-value {
+  font-size: var(--font-size-sm);
+  color: var(--fg-primary);
+  font-weight: 500;
+}
+
+.structure-latin {
+  font-style: italic;
+}
+
+.structure-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.structure-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.structure-meta-label {
+  font-size: var(--font-size-sm);
+  color: var(--fg-muted);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.structure-meta-value {
+  font-size: var(--font-size-sm);
+  color: var(--fg-primary);
+}
+
+.structure-system-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.structure-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.structure-actions .btn {
+  width: 100%;
+  text-align: center;
+}

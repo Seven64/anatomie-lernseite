@@ -1,6 +1,8 @@
-import { DataManager } from "../utils/DataManager";
+import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure, FlashcardProgress, ProgressData } from "../types";
+import { applySm2, createFlashcardProgress, isDue } from "../utils/sm2";
+import { escapeHtml, shuffle } from "../utils/text";
 
 export class FlashcardMode {
   private dataManager: DataManager;
@@ -10,6 +12,7 @@ export class FlashcardMode {
   private currentIndex: number = 0;
   private isFlipped: boolean = false;
   private progressData: ProgressData | null = null;
+  private progressById = new Map<string, FlashcardProgress>();
   private dailyGoal: number = 20;
   private reviewedToday: number = 0;
   private lastReviewDate: string = "";
@@ -28,25 +31,14 @@ export class FlashcardMode {
   }
 
   private async initMode(): Promise<void> {
-    this.progressData = await this.dataManager.loadProgress() || this.getEmptyProgress();
+    this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
+    this.progressById = new Map(this.progressData.flashcardProgress.map(progress => [progress.structureId, progress]));
     this.dailyGoal = this.settingsManager.get("dailyGoal");
     this.loadDailyProgress();
-    this.flashcards = this.dataManager.getAllStructures().filter(s => s.nameLatin);
+    this.flashcards = this.dataManager.getAllStructures().filter(isLearnableStructure);
     this.reviewDueCards();
     this.bindUI();
     this.showCard();
-  }
-
-  private getEmptyProgress(): ProgressData {
-    return {
-      version: "1.0",
-      userId: "local",
-      quizResults: [],
-      flashcardProgress: [],
-      notes: {},
-      bookmarks: [],
-      lastUpdated: new Date().toISOString(),
-    };
   }
 
   private loadDailyProgress(): void {
@@ -59,19 +51,15 @@ export class FlashcardMode {
 
   private reviewDueCards(): void {
     const now = new Date();
-    const dueCards = this.flashcards.filter(s => {
-      const progress = this.progressData!.flashcardProgress.find(p => p.structureId === s.id);
-      if (!progress) return true;
-      return new Date(progress.nextReview) <= now;
-    });
+    const due: Structure[] = [];
+    const later: Structure[] = [];
+    this.flashcards.forEach(structure =>
+      (isDue(this.progressById.get(structure.id), now) ? due : later).push(structure)
+    );
+    const nextReview = (structure: Structure) => this.progressById.get(structure.id)?.nextReview ?? "";
+    due.sort((a, b) => nextReview(a).localeCompare(nextReview(b)));
 
-    dueCards.sort((a, b) => {
-      const pa = this.progressData!.flashcardProgress.find(p => p.structureId === a.id);
-      const pb = this.progressData!.flashcardProgress.find(p => p.structureId === b.id);
-      return (pa?.nextReview || "").localeCompare(pb?.nextReview || "");
-    });
-
-    this.flashcards = [...dueCards, ...this.flashcards.filter(s => !dueCards.includes(s))];
+    this.flashcards = [...due, ...later];
     this.currentIndex = 0;
   }
 
@@ -82,10 +70,8 @@ export class FlashcardMode {
   }
 
   private getFlashcardHTML(): string {
-    const dueCount = this.flashcards.filter(s => {
-      const p = this.progressData!.flashcardProgress.find(fp => fp.structureId === s.id);
-      return !p || new Date(p.nextReview) <= new Date();
-    }).length;
+    const now = new Date();
+    const dueCount = this.flashcards.filter(structure => isDue(this.progressById.get(structure.id), now)).length;
 
     return `
       <div class="flashcard-container" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
@@ -155,11 +141,11 @@ export class FlashcardMode {
 
     document.getElementById("card-front")!.textContent = frontName;
     document.getElementById("card-back")!.innerHTML = `
-      <div><strong>Latein:</strong> ${structure.nameLatin}</div>
-      <div><strong>Deutsch:</strong> ${structure.nameDe || "—"}</div>
-      <div><strong>Englisch:</strong> ${structure.nameEn || "—"}</div>
-      <div style="margin-top: 12px;"><strong>System:</strong> ${structure.system}</div>
-      <div><strong>Region:</strong> ${structure.region || "—"}</div>
+      <div><strong>Latein:</strong> ${escapeHtml(structure.nameLatin)}</div>
+      <div><strong>Deutsch:</strong> ${escapeHtml(structure.nameDe || "—")}</div>
+      <div><strong>Englisch:</strong> ${escapeHtml(structure.nameEn || "—")}</div>
+      <div style="margin-top: 12px;"><strong>System:</strong> ${escapeHtml(structure.system)}</div>
+      <div><strong>Region:</strong> ${escapeHtml(structure.region || "—")}</div>
     `;
 
     document.getElementById("card-stats")!.style.display = "none";
@@ -183,7 +169,7 @@ export class FlashcardMode {
 
   private showCardStats(): void {
     const structure = this.flashcards[this.currentIndex];
-    const progress = this.progressData!.flashcardProgress.find(p => p.structureId === structure.id);
+    const progress = this.progressById.get(structure.id);
     const stats = document.getElementById("card-stats")!;
     if (progress) {
       stats.style.display = "flex";
@@ -191,7 +177,7 @@ export class FlashcardMode {
         <span>Wiederholungen: ${progress.repetitions}</span>
         <span>Intervall: ${progress.interval} Tage</span>
         <span>Leichtigkeit: ${progress.easeFactor.toFixed(2)}</span>
-        <span>Nächste: ${new Date(progress.nextReview).toLocaleDateString()}</span>
+        <span>Nächste: ${new Date(progress.nextReview).toLocaleDateString("de-DE")}</span>
       `;
     } else {
       stats.style.display = "none";
@@ -200,49 +186,20 @@ export class FlashcardMode {
 
   private rateCard(rating: number): void {
     const structure = this.flashcards[this.currentIndex];
-    let progress = this.progressData!.flashcardProgress.find(p => p.structureId === structure.id);
-
-    if (!progress) {
-      progress = {
-        structureId: structure.id,
-        easeFactor: 2.5,
-        interval: 0,
-        repetitions: 0,
-        nextReview: new Date().toISOString(),
-        lastReview: new Date().toISOString(),
-      };
-      this.progressData!.flashcardProgress.push(progress);
-    }
-
-    this.applySM2(progress, rating);
+    const previous = this.progressById.get(structure.id) ?? createFlashcardProgress(structure.id);
+    const updated = applySm2(previous, rating);
+    this.progressById.set(structure.id, updated);
+    this.progressData!.flashcardProgress = [...this.progressById.values()];
 
     this.reviewedToday++;
     this.progressData!.lastUpdated = new Date().toISOString();
-    this.dataManager.saveProgress(this.progressData!);
+    void this.dataManager.saveProgress(this.progressData!).catch(error =>
+      console.error("Failed to save flashcard progress:", error)
+    );
 
     this.currentIndex++;
     this.showCard();
     this.updateDailyCount();
-  }
-
-  private applySM2(progress: FlashcardProgress, rating: number): void {
-    if (rating < 3) {
-      progress.repetitions = 0;
-      progress.interval = 1;
-    } else {
-      if (progress.repetitions === 0) progress.interval = 1;
-      else if (progress.repetitions === 1) progress.interval = 6;
-      else progress.interval = Math.round(progress.interval * progress.easeFactor);
-
-      progress.repetitions++;
-    }
-
-    progress.easeFactor = Math.max(1.3, progress.easeFactor + (0.1 - (5 - rating) * (0.08 + (5 - rating) * 0.02)));
-
-    const nextReview = new Date();
-    nextReview.setDate(nextReview.getDate() + progress.interval);
-    progress.nextReview = nextReview.toISOString();
-    progress.lastReview = new Date().toISOString();
   }
 
   private showCompletion(): void {
@@ -260,8 +217,8 @@ export class FlashcardMode {
     document.getElementById("card-counter")!.textContent = "";
 
     document.getElementById("continue-btn")!.addEventListener("click", () => {
-      this.flashcards = this.dataManager.getAllStructures().filter(s => s.nameLatin);
-      this.shuffleArray(this.flashcards);
+      this.flashcards = this.dataManager.getAllStructures().filter(isLearnableStructure);
+      shuffle(this.flashcards);
       this.currentIndex = 0;
       this.reviewDueCards();
       this.bindUI();
@@ -276,13 +233,6 @@ export class FlashcardMode {
 
   private updateDailyCount(): void {
     document.getElementById("today-count")!.textContent = String(this.reviewedToday);
-  }
-
-  private shuffleArray<T>(array: T[]): void {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
   }
 
   private cleanup(): void {

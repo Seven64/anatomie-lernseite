@@ -13,27 +13,60 @@ interface AnatomyDB extends DBSchema {
   };
   progress: {
     key: string;
-    value: ProgressData;
+    value: StoredProgress;
   };
   settings: {
     key: string;
-    value: UserSettings;
+    value: StoredSettings;
+  };
+  cache: {
+    key: string;
+    value: { id: string; data: unknown };
   };
 }
 
+type StoredProgress = ProgressData & { id: string };
+type StoredSettings = Partial<UserSettings> & { id: string };
+
 const DB_NAME = "anatomy-learning";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STRUCTURES_STORE = "structures";
 const MANIFEST_STORE = "manifest";
 const MANIFEST_VERSION_KEY = "structures-version";
 const STRUCTURES_VERSION = "1.1";
 const PROGRESS_KEY = "user-progress";
 const SETTINGS_KEY = "user-settings";
+const CACHE_STORE = "cache";
 const LEGACY_SEED_IDS = new Set(["skull", "femur", "heart", "brain"]);
+
+export { STRUCTURES_VERSION };
+
+/**
+ * Z-Anatomy enthält neben echten Strukturen auch Beschriftungs- (Suffix „.j“) und
+ * Gruppenknoten („.g“) ohne eigene Geometrie. Diese eignen sich nicht als Lernkarten.
+ */
+export function isLearnableStructure(structure: Structure): boolean {
+  return Boolean(structure.nameLatin) && !/\.[gj]$/.test(structure.nameLatin);
+}
+
+/** Leerer Lernfortschritt – gemeinsame Vorlage für alle Modi. */
+export function createEmptyProgress(): ProgressData {
+  return {
+    version: "1.0",
+    userId: "local",
+    quizResults: [],
+    flashcardProgress: [],
+    notes: {},
+    bookmarks: [],
+    lastUpdated: new Date().toISOString(),
+  };
+}
 
 export class DataManager {
   private db: IDBPDatabase<AnatomyDB> | null = null;
   private structuresCache: Structure[] | null = null;
+  private structuresById = new Map<string, Structure>();
+  private structuresBySystem = new Map<BodySystem, Structure[]>();
   private dbReady: Promise<void>;
 
   constructor() {
@@ -53,6 +86,9 @@ export class DataManager {
         if (oldVersion < 2) {
           db.createObjectStore(MANIFEST_STORE, { keyPath: "id" });
         }
+        if (oldVersion < 3) {
+          db.createObjectStore(CACHE_STORE, { keyPath: "id" });
+        }
       },
     });
   }
@@ -70,7 +106,18 @@ export class DataManager {
       await tx.store.put(structure);
     }
     await tx.done;
+    this.setStructuresCache(structures);
+  }
+
+  private setStructuresCache(structures: Structure[] | null): void {
     this.structuresCache = structures;
+    this.structuresById = new Map((structures ?? []).map(structure => [structure.id, structure]));
+    this.structuresBySystem = new Map();
+    (structures ?? []).forEach(structure => {
+      const list = this.structuresBySystem.get(structure.system);
+      if (list) list.push(structure);
+      else this.structuresBySystem.set(structure.system, [structure]);
+    });
   }
 
   async loadStructures(): Promise<Structure[]> {
@@ -110,27 +157,33 @@ export class DataManager {
       }
       await tx.objectStore(MANIFEST_STORE).put({ id: MANIFEST_VERSION_KEY, version: STRUCTURES_VERSION });
       await tx.done;
-      this.structuresCache = replaceStoredStructures
+      this.setStructuresCache(replaceStoredStructures
         ? manifest.structures
-        : storedStructures.concat(newStructures);
+        : storedStructures.concat(newStructures));
     } else {
-      this.structuresCache = storedStructures;
+      this.setStructuresCache(storedStructures);
     }
 
-    return this.structuresCache;
+    return this.structuresCache ?? [];
   }
 
   async getStructure(id: string): Promise<Structure | undefined> {
-    const structures = await this.loadStructures();
-    return structures.find(s => s.id === id);
+    await this.loadStructures();
+    return this.structuresById.get(id);
   }
 
   // Synchronous version for UI rendering - cache must be loaded first
   getStructureSync(id: string): Structure | undefined {
-    return this.structuresCache?.find(s => s.id === id);
+    return this.structuresById.get(id);
+  }
+
+  /** Synchron, O(1): alle Strukturen eines Systems (Cache muss geladen sein). */
+  getStructuresBySystemSync(system: BodySystem): Structure[] {
+    return this.structuresBySystem.get(system) ?? [];
   }
 
   async getStructuresBySystem(system: BodySystem): Promise<Structure[]> {
+    if (this.structuresCache) return this.getStructuresBySystemSync(system);
     const db = await this.ensureDB();
     return db.getAllFromIndex(STRUCTURES_STORE, "by-system", system);
   }
@@ -144,20 +197,34 @@ export class DataManager {
     return this.structuresCache || [];
   }
 
-  // Synchronous version for UI rendering - cache must be loaded first
+  /** @deprecated Alias für {@link getAllStructures}. */
   getAllStructuresSync(): Structure[] {
-    return this.structuresCache || [];
+    return this.getAllStructures();
   }
 
   async saveProgress(progress: ProgressData): Promise<void> {
     const db = await this.ensureDB();
-    await db.put("progress", { id: PROGRESS_KEY, ...progress } as any);
+    await db.put("progress", { ...progress, id: PROGRESS_KEY });
   }
 
   async loadProgress(): Promise<ProgressData | null> {
     const db = await this.ensureDB();
     const data = await db.get("progress", PROGRESS_KEY);
-    return data ? { ...data, id: undefined } as ProgressData : null;
+    if (!data) return null;
+    const { id: _id, ...progress } = data;
+    return progress;
+  }
+
+  /** Lädt einen Eintrag aus dem generischen Cache-Store (z. B. Muskelschichten). */
+  async loadCache<T>(key: string): Promise<T | null> {
+    const db = await this.ensureDB();
+    const entry = await db.get(CACHE_STORE, key);
+    return entry ? (entry.data as T) : null;
+  }
+
+  async saveCache(key: string, data: unknown): Promise<void> {
+    const db = await this.ensureDB();
+    await db.put(CACHE_STORE, { id: key, data });
   }
 
   async clearProgress(): Promise<void> {
@@ -167,14 +234,16 @@ export class DataManager {
 
   async saveSettings(settings: Partial<UserSettings>): Promise<void> {
     const db = await this.ensureDB();
-    const current = await db.get("settings", SETTINGS_KEY) || { id: SETTINGS_KEY } as any;
-    await db.put("settings", { ...current, ...settings });
+    const current = await db.get("settings", SETTINGS_KEY) ?? { id: SETTINGS_KEY };
+    await db.put("settings", { ...current, ...settings, id: SETTINGS_KEY });
   }
 
   async loadSettings(): Promise<UserSettings | null> {
     const db = await this.ensureDB();
     const data = await db.get("settings", SETTINGS_KEY);
-    return data ? { ...data, id: undefined } as UserSettings : null;
+    if (!data) return null;
+    const { id: _id, ...settings } = data;
+    return settings as UserSettings;
   }
 
   async exportAllData(): Promise<{ structures: Structure[]; progress: ProgressData | null; settings: UserSettings | null }> {
@@ -194,12 +263,15 @@ export class DataManager {
 
   async clearAllData(): Promise<void> {
     const db = await this.ensureDB();
-    const tx = db.transaction([STRUCTURES_STORE, MANIFEST_STORE, "progress", "settings"], "readwrite");
-    await tx.objectStore(STRUCTURES_STORE).clear();
-    await tx.objectStore(MANIFEST_STORE).clear();
-    await tx.objectStore("progress").clear();
-    await tx.objectStore("settings").clear();
-    await tx.done;
-    this.structuresCache = null;
+    const tx = db.transaction([STRUCTURES_STORE, MANIFEST_STORE, "progress", "settings", CACHE_STORE], "readwrite");
+    await Promise.all([
+      tx.objectStore(STRUCTURES_STORE).clear(),
+      tx.objectStore(MANIFEST_STORE).clear(),
+      tx.objectStore("progress").clear(),
+      tx.objectStore("settings").clear(),
+      tx.objectStore(CACHE_STORE).clear(),
+      tx.done,
+    ]);
+    this.setStructuresCache(null);
   }
 }

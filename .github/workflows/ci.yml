@@ -1,0 +1,67 @@
+name: CI
+
+# Prüft jeden Push und jeden Pull Request: Typecheck, Unit-Tests, Daten-Check,
+# Produktions-Build und Docker-Image.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Typecheck, Tests & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Verify structure data
+        run: npm run data:export
+      - name: Build web app
+        run: npm run build
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+          retention-days: 7
+
+  docker:
+    name: Docker-Image
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Build image
+        run: docker build --tag anatomie-lernseite:ci .
+      - name: Smoke test
+        run: |
+          docker run --detach --name app --publish 8080:80 anatomie-lernseite:ci
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://localhost:8080/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://localhost:8080/ | grep -q '<div id="app">'
+          curl --fail --silent --head http://localhost:8080/structures.json
+          docker rm --force app

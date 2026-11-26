@@ -1,0 +1,57 @@
+/* ---------------------------------------------------------------------------
+   Notes & Bookmarks
+   --------------------------------------------------------------------------- */
+.note-item, .bookmark-item {
+  padding: var(--spacing-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-2);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.note-item:hover, .bookmark-item:hover {
+  border-color: var(--border-light);
+  background: var(--bg-hover);
+}
+
+.note-header, .bookmark-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+}
+
+.note-structure, .bookmark-structure {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.note-system, .bookmark-system {
+  font-size: var(--font-size-xs);
+  color: var(--fg-muted);
+  text-transform: capitalize;
+}
+
+.note-content {
+  font-size: var(--font-size-sm);
+  color: var(--fg-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-2);
+  white-space: pre-wrap;
+}
+
+.note-meta, .bookmark-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--fg-muted);
+}
+
+.note-actions, .bookmark-actions {
+  display: flex;
+  gap: var(--spacing-1);
+}
