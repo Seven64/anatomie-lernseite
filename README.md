@@ -123,10 +123,10 @@ git clone https://github.com/Z-Anatomy/Models-of-human-anatomy.git
 
 ```bash
 # Im Projekt-Root
-blender --background --python scripts/export_gltf.py
+blender --background --python scripts/blender/export_gltf.py
 ```
 
-Das Script (`scripts/export_gltf.py`):
+Das Script (`scripts/blender/export_gltf.py`):
 - Lädt `Startup.blend` headless
 - Iteriert alle Collections (entsprechen Body Systems)
 - Wandelt Kurven wie Arterien und Venen vor dem GLB-Export in Mesh-Geometrie um
@@ -173,8 +173,16 @@ anatomie-lernseite/
 │       ├── FlashcardMode.ts    # SM-2, Daily Goal, Due Card Sorting
 │       ├── ProgressMode.ts     # Dashboard, Weak Structures, Streak, Export/Import
 │       └── NotesMode.ts        # Notes/Bookmarks CRUD, Search, Structure Linking
+├── desktop/
+│   └── main.cjs                # Electron-Hauptprozess (lokaler Static-Server)
 ├── scripts/
-│   └── export_gltf.py          # Blender Python Export Script
+│   ├── export-data.js          # Prüft structures.json & GLB-Dateien
+│   └── blender/
+│       ├── export_gltf.py      # Blender Export: Collections → Draco-GLB + structures.json
+│       ├── check_collections.py    # Debug: Collection-Namen auflisten
+│       ├── check_export_params.py  # Debug: glTF-Export-Parameter anzeigen
+│       └── list_collections.py     # Debug: Collection-Hierarchie anzeigen
+├── release/                    # Gebaute Installer & Web-ZIPs (gitignored)
 ├── _source/                    # Z-Anatomy Source (gitignored)
 ├── index.html
 ├── vite.config.ts
@@ -187,6 +195,8 @@ anatomie-lernseite/
 ├── Dockerfile.dev
 ├── docker-compose.yml
 ├── nginx.conf
+├── nginx-security-headers.conf # Security-Header & CSP für nginx
+├── .dockerignore
 ├── start.sh
 └── README.md
 ```
@@ -235,7 +245,7 @@ MIT License — Siehe [LICENSE](LICENSE)
 
 ### Code Style
 - TypeScript `strict: true`
-- ESLint + Prettier (via Vite)
+- Typecheck über `npm run build` (`tsc`, inkl. `noUnusedLocals`/`noUnusedParameters`)
 - CSS Variables für Theming
 - Keine `any` Types
 

@@ -15,27 +15,6 @@ const __dirname = path.dirname(__filename);
 const STRUCTURES_JSON = path.resolve(__dirname, '../public/structures.json');
 const EXPORT_DIR = path.resolve(__dirname, '../public/models');
 
-interface Structure {
-  id: string;
-  nameLatin: string;
-  nameDe?: string;
-  nameEn?: string;
-  system: string;
-  region?: string;
-  objectName: string;
-  glbFile: string;
-  parentId?: string;
-  childrenIds?: string[];
-}
-
-interface StructuresData {
-  version: string;
-  source: string;
-  license: string;
-  exported: string;
-  structures: Structure[];
-}
-
 async function main() {
   console.log('📊 Anatomie Lernseite - Data Import');
   console.log('='.repeat(40));
@@ -44,12 +23,13 @@ async function main() {
   if (!fs.existsSync(STRUCTURES_JSON)) {
     console.error('❌ structures.json not found!');
     console.error('   Run the Blender export first:');
-    console.error('   blender --background --python scripts/export_gltf.py');
+    console.error('   blender --background --python scripts/blender/export_gltf.py');
     process.exit(1);
   }
 
   // Read structures
-  const data: StructuresData = JSON.parse(fs.readFileSync(STRUCTURES_JSON, 'utf-8'));
+  /** @type {{version: string, source: string, license: string, exported: string, structures: Array<{system: string, region?: string, glbFile: string}>}} */
+  const data = JSON.parse(fs.readFileSync(STRUCTURES_JSON, 'utf-8'));
   const structures = data.structures;
 
   console.log(`📥 Loaded ${structures.length} structures from ${data.source}`);
@@ -58,8 +38,9 @@ async function main() {
 
   // Verify GLB files exist
   console.log('\n🔍 Verifying GLB files...');
-  const missingFiles: string[] = [];
-  const systems = new Set<string>();
+  /** @type {string[]} */
+  const missingFiles = [];
+  const systems = new Set();
 
   for (const struct of structures) {
     const glbPath = path.resolve(EXPORT_DIR, struct.glbFile);
@@ -88,8 +69,10 @@ async function main() {
   console.log('\n   Or use the in-app Settings → Import Data with a backup file');
 
   // Generate stats
-  const bySystem: Record<string, number> = {};
-  const byRegion: Record<string, number> = {};
+  /** @type {Record<string, number>} */
+  const bySystem = {};
+  /** @type {Record<string, number>} */
+  const byRegion = {};
 
   for (const struct of structures) {
     bySystem[struct.system] = (bySystem[struct.system] || 0) + 1;
@@ -111,4 +94,7 @@ async function main() {
   console.log('\n✅ Data verification complete!');
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
