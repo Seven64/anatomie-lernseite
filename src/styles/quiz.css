@@ -22,6 +22,7 @@
 
 .quiz-toolbar .select {
   flex: 1 1 170px;
+  min-width: 0;
   width: auto;
   max-width: 260px;
 }
@@ -52,6 +53,13 @@
   gap: var(--spacing-2);
 }
 
+/* Niedrige Fenster (kleine Laptops, Handy quer): Bühne darf weiter schrumpfen. */
+@media (max-height: 720px) {
+  .quiz-stage {
+    min-height: 120px;
+  }
+}
+
 .quiz-answer-row .search-input {
   flex: 1 1 220px;
   max-width: 420px;
@@ -61,7 +69,6 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
 }
 
 .quiz-progress-bar {
@@ -91,19 +98,17 @@
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--fg-primary);
-  margin-bottom: var(--spacing-4);
   text-align: center;
 }
 
 .quiz-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-2);
 }
 
 .quiz-option {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
   border: 2px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg-secondary);

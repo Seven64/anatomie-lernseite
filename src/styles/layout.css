@@ -35,7 +35,18 @@
   gap: var(--spacing-3);
 }
 
+/* Bei schmalen Fenstern scrollt die Modus-Leiste, statt Logo und Symbole zu stauchen. */
+.header-center {
+  min-width: 0;
+}
+
+.app-header .btn-icon,
 .header-brand {
+  flex-shrink: 0;
+}
+
+.header-brand {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
@@ -52,6 +63,8 @@
 }
 
 .mode-tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
   display: flex;
   gap: var(--spacing-1);
   background: var(--bg-tertiary);
@@ -70,6 +83,7 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mode-tab:hover {

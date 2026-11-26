@@ -35,6 +35,8 @@ Quiz-Layout, das auch in kleinen Fenstern funktioniert.
 - Das geschlossene Info-Panel ist nicht mehr per Tab-Taste erreichbar; der ViewCube
   weicht dem geöffneten Panel aus. Auf dem Handy belegt das Panel weniger Platz.
 - Im Einstellungsdialog überdeckt die Fußzeile den Inhalt nicht mehr.
+- In schmalen Fenstern und auf dem Handy werden die Symbole der Kopfzeile nicht mehr
+  gestaucht; die Modus-Leiste lässt sich bei Bedarf seitlich scrollen.
 - Neue Tests für Kameraberechnung und Desktop-App (Start, Darstellung, Speichern
   über Neustarts).
 
