@@ -12,7 +12,7 @@
     "desktop:dir": "npm run build && electron-builder --dir",
     "desktop:win": "npm run build && electron-builder --win nsis",
     "data:export": "node scripts/export-data.js",
-    "test:blender": "blender --background --python scripts/export_gltf.py"
+    "test:blender": "blender --background --python scripts/blender/export_gltf.py"
   },
   "dependencies": {
     "fuse.js": "^7.0.0",

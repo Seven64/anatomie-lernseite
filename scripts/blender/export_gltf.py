@@ -5,7 +5,7 @@ Exports each body system collection as a Draco-compressed GLB file
 and generates structures.json with metadata.
 
 Usage:
-    blender --background --python scripts/export_gltf.py
+    blender --background --python scripts/blender/export_gltf.py
 
 Requirements:
     - Blender 4.0+
