@@ -1,6 +1,6 @@
 import { Structure } from "../types";
 import { SettingsManager } from "../utils/SettingsManager";
-import { escapeHtml } from "../utils/text";
+import { escapeHtml, formatStructureName } from "../utils/text";
 import { regionLabel, systemLabel } from "./constants";
 import { INFO_PANEL_EMPTY_HTML } from "./layout";
 
@@ -42,9 +42,9 @@ export class InfoPanel {
     content.innerHTML = `
       <div class="structure-info">
         <div class="structure-names">
-          ${nameRow("Latein", structure.nameLatin, "structure-latin")}
-          ${nameRow("Deutsch", structure.nameDe)}
-          ${nameRow("Englisch", structure.nameEn)}
+          ${nameRow("Name", formatStructureName(structure.nameLatin), "structure-latin")}
+          ${nameRow("Deutsch", structure.nameDe && formatStructureName(structure.nameDe))}
+          ${nameRow("Englisch", structure.nameEn && formatStructureName(structure.nameEn))}
         </div>
         <div class="structure-meta">
           <div class="structure-meta-item">
