@@ -1,5 +1,8 @@
 # Anatomie Lernseite
 
+[![CI](https://github.com/Seven64/anatomie-lernseite/actions/workflows/ci.yml/badge.svg)](https://github.com/Seven64/anatomie-lernseite/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Seven64/anatomie-lernseite)](https://github.com/Seven64/anatomie-lernseite/releases/latest)
+
 Interaktive Web-Anwendung zum Erlernen der menschlichen Anatomie mit 3D-Modellen, Quiz-Modi, Karteikarten (Spaced Repetition) und Fortschrittsverfolgung.
 
 > **Datenquelle**: 3D-Modelle von [Z-Anatomy](https://github.com/Z-Anatomy/Models-of-human-anatomy) (CC BY-SA 4.0)
@@ -15,29 +18,57 @@ Interaktive Web-Anwendung zum Erlernen der menschlichen Anatomie mit 3D-Modellen
 
 | Modus | Beschreibung |
 |-------|-------------|
-| **Atlas** | 3D-Viewer mit Hover-Bezeichnungen, nach Körperregionen und anatomischen Elternstrukturen unterteiltem Strukturbaum, gruppierten Gewebe-Layern (Muskulatur, Sehnen, Arterien, Venen, Herz), originalen Blender-Materialfarben für alle Anatomie-Systeme, drei richtungsgebundenen Schnittebenen, Isolieren/Ausblenden und fein einstellbarer Deckkraft |
-| **Beschriftungs-Quiz** | Freitext-Eingabe mit Fuzzy-Matching (Levenshtein + Umlaut-Normalisierung) |
-| **Quiz** | Zwei Modi: "Wo ist ...?" (Raycasting) & "Wie heißt ...?" (Multiple Choice) |
-| **Karteikarten** | SM-2 Algorithmus, Tagesziel, fällige Karten Priorisierung |
+| **Atlas** | 3D-Viewer mit Hover-Bezeichnungen, nach Körperregionen und anatomischen Elternstrukturen unterteiltem Strukturbaum, gruppierten Gewebe-Layern (Muskulatur, Sehnen, Arterien, Venen, Herz), originalen Blender-Materialfarben, Isolieren/Ausblenden und Deckkraft je System |
+| **Beschriftungs-Quiz** | Markierte Struktur benennen – Freitext mit Fuzzy-Matching (Levenshtein + Umlaut-Normalisierung) |
+| **Quiz** | „Wo ist …?“ (Struktur im Modell anklicken) & „Wie heißt …?“ (Multiple Choice), Filter nach System und Region |
+| **Karteikarten** | SM-2-Algorithmus, Tagesziel, Priorisierung fälliger Karten |
 | **Fortschritt** | Dashboard mit Genauigkeit, System-Fortschritt, Schwachstellen, Streak |
 | **Notizen** | Persönliche Notizen & Lesezeichen pro Struktur, Export/Import |
+
+### Neu in 1.1
+
+- **Muskelschichten abtragen:** Im Reiter *Muskulatur* trägt ein Schicht-Slider die
+  Muskeln von außen nach innen ab (z. B. *M. obliquus externus* → *internus* →
+  *transversus abdominis*). Die Schichten werden beim ersten Einblenden einmalig
+  geometrisch berechnet (≈ 5 s) und danach lokal zwischengespeichert. Optional
+  bleiben abgetragene Schichten als transparente Hülle sichtbar.
+- **Feinfühliges Schneiden:** Schnittebenen in 0,1-%-Schritten, mit <kbd>Umschalt</kbd>
+  in 0,01-%-Schritten bzw. 10× langsamerem Ziehen, −/+ Knöpfe und Zahleneingabe.
+  Der Sliderweg bezieht sich nur noch auf die eingeblendeten Strukturen; eine
+  halbtransparente Ebene zeigt beim Verschieben die Schnittposition.
+- **ViewCube wie in CAD:** Würfel oben rechts im Atlas – Klick auf Fläche, Kante oder
+  Ecke dreht die Ansicht animiert; Knöpfe für Gesamtansicht und 90°-Drehung.
+- **Neues Logo** und Programmsymbol.
+
+### Tastenkürzel im Atlas
+
+| Taste | Aktion |
+|-------|--------|
+| <kbd>Num 1</kbd> / <kbd>Strg</kbd>+<kbd>Num 1</kbd> | Ansicht von vorne / hinten |
+| <kbd>Num 3</kbd> / <kbd>Strg</kbd>+<kbd>Num 3</kbd> | Ansicht von rechts / links (Patientensicht) |
+| <kbd>Num 7</kbd> / <kbd>Strg</kbd>+<kbd>Num 7</kbd> | Ansicht von oben / unten |
+| <kbd>Num 4</kbd> / <kbd>Num 6</kbd> | Um 90° nach links / rechts drehen |
+| <kbd>Pos1</kbd> | Gesamtansicht |
+| <kbd>←</kbd> <kbd>→</kbd> auf Schnitt-Slider | ±0,1 % (mit <kbd>Umschalt</kbd> ±0,01 %) |
+| <kbd>Bild↑</kbd> <kbd>Bild↓</kbd> auf Schnitt-Slider | ±10 % (mit <kbd>Umschalt</kbd> ±1 %) |
 
 Die Schnittebenen blenden Geometrie im Viewer aus. Sie verändern keine Modelldateien und erzeugen keine geschlossenen Schnittflächen.
 
 ## 🛠 Tech Stack
 
-- **Frontend**: Vite + TypeScript + Three.js (GLTFLoader, DRACOLoader, OrbitControls)
-- **State**: IndexedDB (idb) für Structures/Progress, localStorage für Settings
-- **Search**: Fuse.js für Fuzzy-Suche
-- **Algorithms**: SM-2 Spaced Repetition, Levenshtein Distance
-- **Build**: Vite mit Code-Splitting (Three.js, Vendor chunks)
-- **Deploy**: Docker + Nginx (gzip/brotli, CSP, Cache-Headers für GLB)
+- **Frontend**: Vite + TypeScript (strict) + Three.js (GLTFLoader, DRACOLoader, OrbitControls), kein UI-Framework
+- **Raycasting**: [three-mesh-bvh](https://github.com/gkjohnson/three-mesh-bvh) (Hover-Picking, Schichtberechnung)
+- **State**: IndexedDB (idb) für Strukturen, Fortschritt und Schicht-Cache; localStorage für Einstellungen
+- **Algorithmen**: SM-2 Spaced Repetition, Levenshtein-Distanz, BVH-basierte Schichtzuordnung
+- **Tests**: Vitest (Unit-Tests für reine Logik), GitHub Actions (CI, Release, Pages)
+- **Build**: Vite mit Code-Splitting (Three.js-Chunk)
+- **Deploy**: GitHub Pages, Docker + Nginx (gzip, CSP, Cache-Header für GLB), Electron/NSIS
 
 ## 📦 Quick Start
 
 ### Voraussetzungen
 
-- Node.js 18+ / npm
+- Node.js 20+ / npm
 - Docker (optional, für Production)
 - Blender 4.x (für Data Pipeline)
 
@@ -57,6 +88,30 @@ npm run dev
 ./start.sh
 ```
 
+### Befehle
+
+| Befehl | Zweck |
+|--------|-------|
+| `npm run dev` | Vite-Dev-Server mit Hot Reload |
+| `npm run build` | Typecheck (`tsc`) + Produktions-Build nach `dist/` |
+| `npm run preview` | `dist/` lokal ausliefern |
+| `npm run typecheck` | Nur Typecheck (inkl. `tests/`) |
+| `npm test` | Unit-Tests (Vitest), `npm run test:watch` im Watch-Modus |
+| `npm run check` | Typecheck + Tests + Daten-Check – dasselbe wie die CI |
+| `npm run data:export` | Prüft `structures.json` gegen `public/models` |
+| `npm run icon` | Erzeugt `build/icon.ico` aus `public/logo.svg` (rsvg-convert + ImageMagick) |
+| `npm run desktop:dir` / `desktop:win` | Electron-App ungepackt bzw. als NSIS-Installer nach `release/` |
+
+### Tests & CI
+
+- **Unit-Tests** liegen in `tests/` und decken die reine Logik ab: SM-2, Text-/Antwortvergleich,
+  Schnittebenen-Mathematik, Schichtzuordnung, Strukturbaum-Gruppierung und die Konsistenz von
+  `public/structures.json` (Version, eindeutige IDs, vorhandene GLB-Dateien).
+- **CI** (`.github/workflows/ci.yml`) läuft bei jedem Push auf `main` und jedem Pull Request:
+  Typecheck, Tests, Daten-Check, Build und ein Docker-Image inklusive Smoke-Test.
+- **Pages** (`deploy-pages.yml`) veröffentlicht `main` nach erfolgreichem `npm run check`.
+- **Release** (`release.yml`) – siehe [docs/RELEASE.md](docs/RELEASE.md).
+
 ### Windows-Desktop-Installer
 
 Die Windows-Version wird als Electron-Installer gebaut. Die bereits exportierten
@@ -69,7 +124,8 @@ npm install
 npm run desktop:win
 ```
 
-Der Installer liegt danach im Ordner `release`. Ohne Code-Signing-Zertifikat ist die
+Für veröffentlichte Versionen baut die GitHub Action `release.yml` den Installer
+automatisch auf einem Windows-Runner. Der Installer liegt beim lokalen Build im Ordner `release`. Ohne Code-Signing-Zertifikat ist die
 Setup-Datei nicht signiert und Windows kann eine Herausgeber-Warnung anzeigen.
 Der NSIS-Assistent zeigt vor der Installation eine deutschsprachige Lizenz- und
 Komponentenübersicht aus `installer/license_de.html`.
@@ -151,55 +207,48 @@ Falls Blender nicht verfügbar: GLB-Dateien manuell nach `public/models/<system>
 
 ```
 anatomie-lernseite/
+├── .github/workflows/          # ci.yml, release.yml, deploy-pages.yml
 ├── public/
 │   ├── models/                 # GLB-Dateien (nach System geordnet)
+│   ├── structures.json         # Strukturmetadaten
+│   ├── vendor/draco/           # lokaler Draco-Decoder
 │   ├── licenses/               # Lizenztexte und Quellenhinweise
 │   └── logo.svg                # Programmzeichen und Favicon
-├── build/
-│   └── icon.ico                # Symbol für Programm und Windows-Installer
+├── build/icon.ico              # Symbol für Programm und Windows-Installer
 ├── src/
-│   ├── main.ts                 # Entry Point
-│   ├── App.ts                  # Haupt-Controller, Mode-Switching
-│   ├── types/index.ts          # TypeScript Interfaces
-│   ├── styles/main.css         # Design System (CSS Variables, Dark/Light, Responsive)
+│   ├── main.ts, App.ts         # Einstieg, Modus-Umschaltung
+│   ├── types/index.ts          # zentrale Interfaces
+│   ├── styles/                 # main.css importiert base, layout, tree, atlas, quiz …
+│   ├── ui/                     # UI-Bausteine (Layout, Strukturbaum, Schnitt-/Schicht-Steuerung,
+│   │                           #   Info-Panel, Einstellungen, Toasts) + reine Baum-Logik
 │   ├── utils/
-│   │   ├── DataManager.ts      # IndexedDB Wrapper (Structures, Progress, Settings)
-│   │   ├── SettingsManager.ts  # localStorage + Reactive Subscriptions
-│   │   └── UIManager.ts        # Layout, Sidebar, Info-Panel, Modals, Toasts
+│   │   ├── DataManager.ts      # IndexedDB (Strukturen, Fortschritt, Cache)
+│   │   ├── SettingsManager.ts  # localStorage + Subscriptions
+│   │   ├── UIManager.ts        # Fassade über src/ui/
+│   │   ├── PreviewViewer.ts    # 3D-Vorschau der Quiz-Modi (Modell-Cache)
+│   │   ├── three.ts            # Three.js-Helfer, BVH-Raycasting
+│   │   ├── sm2.ts, text.ts     # reine Logik (SM-2, Textvergleich)
 │   └── modules/
-│       ├── AtlasMode.ts        # Three.js Scene, Lazy-Loading, Clipping, Highlighting
-│       ├── LabelQuizMode.ts    # Fuzzy-Matching, Per-Question 3D Loading
-│       ├── QuizMode.ts         # Locate/Identify, Raycasting, System/Region Filter
-│       ├── FlashcardMode.ts    # SM-2, Daily Goal, Due Card Sorting
-│       ├── ProgressMode.ts     # Dashboard, Weak Structures, Streak, Export/Import
-│       └── NotesMode.ts        # Notes/Bookmarks CRUD, Search, Structure Linking
-├── desktop/
-│   └── main.cjs                # Electron-Hauptprozess (lokaler Static-Server)
+│       ├── AtlasMode.ts        # Orchestrierung des Atlas
+│       ├── atlas/              # AtlasScene, ModelRegistry, CuttingPlanes, MuscleLayers,
+│       │                       #   ViewCube + reine Logik (cuttingMath, layerAssignment)
+│       ├── LabelQuizMode.ts, QuizMode.ts, FlashcardMode.ts
+│       └── ProgressMode.ts, NotesMode.ts
+├── tests/                      # Vitest-Unit-Tests
+├── docs/                       # ARCHITECTURE.md, RELEASE.md
+├── desktop/main.cjs            # Electron-Hauptprozess (lokaler Static-Server)
+├── installer/license_de.html   # Lizenzseite im NSIS-Installer
 ├── scripts/
-│   ├── export-data.js          # Prüft structures.json & GLB-Dateien
-│   └── blender/
-│       ├── export_gltf.py      # Blender Export: Collections → Draco-GLB + structures.json
-│       ├── check_collections.py    # Debug: Collection-Namen auflisten
-│       ├── check_export_params.py  # Debug: glTF-Export-Parameter anzeigen
-│       └── list_collections.py     # Debug: Collection-Hierarchie anzeigen
-├── release/                    # Gebaute Installer & Web-ZIPs (gitignored)
-├── _source/                    # Z-Anatomy Source (gitignored)
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-├── package.json
-├── LICENSE                     # MIT-Lizenz für den Projektcode
-├── installer/
-│   └── license_de.html         # Deutsche Lizenz- und Komponentenübersicht
-├── Dockerfile
-├── Dockerfile.dev
-├── docker-compose.yml
-├── nginx.conf
-├── nginx-security-headers.conf # Security-Header & CSP für nginx
-├── .dockerignore
-├── start.sh
-└── README.md
+│   ├── export-data.js          # Daten-Check
+│   ├── make-icon.sh            # Logo → icon.ico
+│   └── blender/                # Blender-Export + Debug-Helfer
+├── Dockerfile, Dockerfile.dev, docker-compose.yml
+├── nginx.conf, nginx-security-headers.conf
+├── CHANGELOG.md, RELEASE_NOTES.md
+└── LICENSE                     # MIT-Lizenz für den Projektcode
 ```
+
+Details zu Modulen, Datenfluss und Algorithmen: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## ⚙️ Konfiguration
 
@@ -207,7 +256,7 @@ anatomie-lernseite/
 
 | Key | Typ | Default | Beschreibung |
 |-----|-----|---------|-------------|
-| `theme` | `"dark" \| "light" \| "system"` | `"system"` | Farbschema |
+| `theme` | `"dark" \| "light" \| "system"` | `"light"` | Farbschema |
 | `labelLanguage` | `"latin" \| "de" \| "en"` | `"latin"` | Beschriftungssprache |
 | `dailyGoal` | `number` | `20` | Tagesziel Karteikarten |
 | `showLabels` | `boolean` | `true` | Bezeichnung beim Überfahren einer Struktur anzeigen |
@@ -234,18 +283,22 @@ MIT License — Siehe [LICENSE](LICENSE)
 - **Universität Tokio** — Digitale Anatomie-Modelle
 - **Universität Zürich** — Medizinische Bilddaten
 
+### Mitgelieferte Bibliotheken
+three.js und three-mesh-bvh (MIT), idb (ISC), Draco-Decoder (Apache 2.0) – Lizenztexte in `public/licenses/` und `public/vendor/draco/`.
+
 > **Wichtig**: Bei Weitergabe der Modelle (GLB-Dateien) muss die CC BY-SA 4.0 Lizenz beibehalten und die obigen Quellen genannt werden. In der Anwendung sind Quellen und Lizenzhinweise im Tab „Über“ sowie im Installationsassistenten aufgeführt.
 
 ## 🤝 Contributing
 
 1. Fork & Branch (`feature/amazing-feature`)
 2. Commits mit konventionellen Messages (`feat: add ...`)
-3. Tests hinzufügen / manuell prüfen
-4. Pull Request erstellen
+3. `npm run check` lokal ausführen; neue reine Logik mit Tests in `tests/` absichern
+4. Pull Request erstellen – die CI muss grün sein
 
 ### Code Style
 - TypeScript `strict: true`
-- Typecheck über `npm run build` (`tsc`, inkl. `noUnusedLocals`/`noUnusedParameters`)
+- Typecheck über `npm run typecheck` (inkl. `noUnusedLocals`/`noUnusedParameters`)
+- Keine Datei über ~400 Zeilen: größere Bereiche in Module unter `src/ui/` bzw. `src/modules/atlas/` aufteilen
 - CSS Variables für Theming
 - Keine `any` Types
 
@@ -267,12 +320,16 @@ blender --background --version
 
 ### IndexedDB Quota Exceeded
 - Browser-Daten löschen (DevTools → Application → Clear Storage)
-- Oder: `npm run data:export` → Backup → `localStorage.clear()` → Import
+- Oder: Einstellungen → „Daten exportieren“ → Speicher leeren → „Daten importieren“
+
+### Schicht-Slider bleibt bei „Berechne …“
+- Die Berechnung läuft einmalig beim ersten Einblenden der Muskulatur (≈ 5 s auf einem Desktop-Rechner).
+- Das Ergebnis liegt im IndexedDB-Store `cache`. „Alle Daten löschen“ in den Einstellungen setzt es zurück.
 
 ### Performance (Mobile)
 - Modelle sind Draco-komprimiert (~60-80% kleiner)
-- Lazy-Loading pro System im Atlas
-- Falls FPS < 30: `renderer.setPixelRatio(1)` in `AtlasMode.ts`
+- Lazy-Loading pro System im Atlas, BVH-beschleunigtes Picking
+- Falls FPS < 30: `setPixelRatio(1)` in `src/modules/atlas/AtlasScene.ts`
 
 ## 📚 Weiterführende Links
 
