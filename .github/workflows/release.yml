@@ -1,68 +1,78 @@
 name: Release
 
-# Erstellt ein GitHub-Release mit Windows-Installer und Web-Paket.
-# Auslöser: Tag „vX.Y.Z“ pushen (muss zur Version in package.json passen).
+# Erkennt die Version automatisch aus package.json auf main.
+# Gibt es für diese Version noch kein Release, werden Windows-Installer und Web-ZIP
+# gebaut und Tag „vX.Y.Z“ samt GitHub-Release angelegt. Existiert es bereits, passiert nichts.
+# Neues Release = Version in package.json anheben und nach main mergen.
 on:
   push:
-    tags: ["v*.*.*"]
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Bestehendes Tag, z. B. v1.1.0"
-        required: true
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
-  verify:
-    name: Version prüfen & testen
+  detect:
+    name: Version erkennen
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       tag: ${{ steps.version.outputs.tag }}
+      release: ${{ steps.version.outputs.release }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.tag || github.ref }}
+      - name: Read version and check for existing release
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          tag="v$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "Release $tag existiert bereits – nichts zu tun."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Neue Version erkannt: $tag"
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  verify:
+    name: Testen
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.release == 'true'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - name: Compare tag and package.json version
-        id: version
-        env:
-          TAG: ${{ inputs.tag || github.ref_name }}
-        run: |
-          version="$(node -p "require('./package.json').version")"
-          if [ "$TAG" != "v$version" ]; then
-            echo "::error::Tag $TAG passt nicht zur package.json-Version $version"
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
       - name: Install dependencies
         run: npm ci
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
       - name: Typecheck, tests and data check
         run: npm run check
+      - name: Release notes must mention the version
+        run: grep -q "${{ needs.detect.outputs.version }}" RELEASE_NOTES.md || { echo "::error::RELEASE_NOTES.md erwähnt Version ${{ needs.detect.outputs.version }} nicht"; exit 1; }
 
   web:
     name: Web-Paket
     runs-on: ubuntu-latest
-    needs: verify
+    needs: [detect, verify]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.verify.outputs.tag }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -77,7 +87,7 @@ jobs:
       - name: Create ZIP
         run: |
           mkdir -p release
-          (cd dist && zip -qr "../release/Anatomie-Lernseite-Web-${{ needs.verify.outputs.version }}.zip" .)
+          (cd dist && zip -qr "../release/Anatomie-Lernseite-Web-${{ needs.detect.outputs.version }}.zip" .)
       - name: Upload web package
         uses: actions/upload-artifact@v4
         with:
@@ -88,12 +98,10 @@ jobs:
   windows:
     name: Windows-Installer
     runs-on: windows-latest
-    needs: verify
+    needs: [detect, verify]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.verify.outputs.tag }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -118,14 +126,12 @@ jobs:
   release:
     name: GitHub-Release veröffentlichen
     runs-on: ubuntu-latest
-    needs: [verify, web, windows]
+    needs: [detect, web, windows]
     permissions:
       contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.verify.outputs.tag }}
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -133,12 +139,14 @@ jobs:
           merge-multiple: true
       - name: Create checksums
         run: (cd artifacts && sha256sum *.exe *.zip > SHA256SUMS.txt && cat SHA256SUMS.txt)
-      - name: Publish release
+      - name: Publish release (legt Tag auf diesem Commit an)
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.verify.outputs.tag }}
-          name: Anatomie Lernseite ${{ needs.verify.outputs.version }}
+          tag_name: ${{ needs.detect.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Anatomie Lernseite ${{ needs.detect.outputs.version }}
           body_path: RELEASE_NOTES.md
+          make_latest: true
           files: |
             artifacts/*.exe
             artifacts/*.exe.blockmap

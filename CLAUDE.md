@@ -96,8 +96,9 @@ _source/                   Z-Anatomy-Quelldaten (Startup.blend) – gitignored
 - **Electron** packt nur `dist/`, `desktop/` und `package.json` (siehe `build.files`
   in `package.json`). Vor `desktop:*` läuft automatisch `npm run build`.
 - **Deploy:** Push auf `main` → `deploy-pages.yml` (nach `npm run check`) auf GitHub Pages.
-  Release: Version in `package.json` anheben, Tag `vX.Y.Z` pushen → `release.yml` baut
-  Installer + Web-ZIP (siehe `docs/RELEASE.md`). Tag muss zur `package.json`-Version passen.
+  Release: Version in `package.json` anheben und nach `main` mergen → `release.yml` erkennt
+  die neue Version, baut Windows-Installer + Web-ZIP und legt Tag `vX.Y.Z` + Release an
+  (siehe `docs/RELEASE.md`). `RELEASE_NOTES.md` muss die Version nennen.
 - **Version:** kommt aus `package.json` (`__APP_VERSION__` via `define` in `vite.config.ts`).
 
 ## Konventionen

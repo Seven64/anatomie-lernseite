@@ -1,6 +1,6 @@
-import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
+import { DataManager, isLearnableStructure } from "../utils/DataManager";
 import { SettingsManager } from "../utils/SettingsManager";
-import { Structure, BodySystem, QuizResult, ProgressData } from "../types";
+import { Structure, BodySystem, QuizResult } from "../types";
 import { regionLabel, systemLabel } from "../ui/constants";
 import { PreviewViewer } from "../utils/PreviewViewer";
 import { escapeHtml, shuffle } from "../utils/text";
@@ -21,9 +21,9 @@ export class QuizMode {
   private total: number = 0;
   private options: Structure[] = [];
   private isActive: boolean = false;
-  private progressData: ProgressData | null = null;
   private viewer: PreviewViewer | null = null;
   private answered = false;
+  private questionShownAt = 0;
   private nextTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(dataManager: DataManager, settingsManager: SettingsManager) {
@@ -41,7 +41,6 @@ export class QuizMode {
   }
 
   private async initMode(): Promise<void> {
-    this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
     this.bindFilters();
     this.bindQuizEvents();
     this.applyFilters();
@@ -168,6 +167,7 @@ export class QuizMode {
       return this.nextQuestion(attempt + 1);
     }
     this.total++;
+    this.questionShownAt = performance.now();
     this.updateProgress();
   }
 
@@ -261,11 +261,10 @@ export class QuizMode {
       mode: this.currentMode,
       correct,
       timestamp: new Date().toISOString(),
-      responseTime: 0,
+      responseTime: Math.round(performance.now() - this.questionShownAt),
     };
     this.updateProgress();
-    this.progressData!.quizResults.push(result);
-    void this.dataManager.saveProgress(this.progressData!).catch(error =>
+    void this.dataManager.updateProgress(progress => { progress.quizResults.push(result); }).catch(error =>
       console.error("Failed to save quiz result:", error)
     );
   }

@@ -16,8 +16,10 @@ Alle nennenswerten Änderungen an diesem Projekt. Format nach
   Zahleneingabe, Ebenen-Vorschau; Grenzen beziehen sich auf sichtbare Strukturen.
 - Ladefortschritt im Atlas.
 - Vitest-Unit-Tests (`tests/`), Skripte `typecheck`, `test`, `check`, `icon`.
-- GitHub Actions: `ci.yml` (Typecheck, Tests, Daten-Check, Build, Docker-Smoke-Test)
-  und `release.yml` (Windows-Installer, Web-ZIP, Prüfsummen, GitHub-Release).
+- GitHub Actions: `ci.yml` (Typecheck, Tests, Daten-Check, Build, Docker-Smoke-Test,
+  Windows-Installer-Probe) und `release.yml` (erkennt neue Versionen auf `main`,
+  baut Windows-Installer und Web-ZIP, legt Tag und GitHub-Release an).
+- Lesbare Strukturnamen (`formatStructureName()`), Seite und Ursprung/Ansatz ausgeschrieben.
 - Dokumentation: `docs/ARCHITECTURE.md`, `docs/RELEASE.md`, dieses Changelog.
 - Neues Logo (`public/logo.svg`) und Programmsymbol (`build/icon.ico`).
 
@@ -43,6 +45,15 @@ Alle nennenswerten Änderungen an diesem Projekt. Format nach
 - Klick nach dem Drehen der Ansicht wählte versehentlich Strukturen aus.
 - Gleichzeitige Ladeanfragen desselben Systems luden das Modell doppelt.
 - Fehlende HTML-Maskierung von Strukturnamen in mehreren Ansichten.
+
+- Leerer Atlas, wenn ein Tab mit älterer Version das Datenbank-Upgrade blockierte
+  (Fallback auf `structures.json`, Hinweis-Toast, Startanzeige).
+- Fortschritt/Lesezeichen/Notizen überschrieben sich gegenseitig (atomares `updateProgress()`).
+- Notizen wurden als HTML gerendert; Klick auf Notiz/Lesezeichen schloss das Info-Panel sofort.
+- Globale Suche lieferte Beschriftungsknoten ohne Geometrie.
+- Quiz-Punktestand aktualisierte sich verspätet; Modusknöpfe falsch markiert;
+  Beschriftungs-Quiz speicherte keine Ergebnisse; Antwortzeit immer 0.
+- Fortschrittsansicht mit internen Systemnamen und doppeltem Prozentzeichen.
 
 ### Entfernt
 - Ungenutzte Abhängigkeit Fuse.js.

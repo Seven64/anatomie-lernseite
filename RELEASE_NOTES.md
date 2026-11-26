@@ -25,7 +25,17 @@ einen Navigationswürfel wie in CAD-Programmen und eine überarbeitete Codebasis
 - Atlas zeigt beim Laden einen Fortschrittsbalken; Ausblenden nach dem Drehen wählt
   keine Struktur mehr versehentlich aus.
 - Einstellungsdialog zeigt die gespeicherten Werte korrekt an; Thema-Symbol wechselt.
-- Neue automatische Tests und GitHub-Workflows für CI und Releases.
+- Der Atlas blieb leer (kein Skelett), wenn noch ein Tab mit einer älteren Version
+  geöffnet war. Die App lädt die Daten jetzt trotzdem und zeigt einen Hinweis.
+- Strukturnamen ohne interne Kürzel, z. B. „Deltoid muscle (links)“ oder
+  „Procerus muscle – Ursprung (rechts)“.
+- Lernfortschritt, Lesezeichen und Notizen überschreiben sich nicht mehr gegenseitig;
+  das Beschriftungs-Quiz zählt jetzt im Fortschritt mit, Antwortzeiten werden erfasst.
+- Notizen werden als Text angezeigt (kein HTML); Klick auf Notiz/Lesezeichen öffnet
+  die Struktur im Atlas.
+- Fortschrittsansicht mit deutschen Systemnamen und Zahlenformaten.
+- Neue automatische Tests und GitHub-Workflows für CI und Releases; Releases werden
+  automatisch erstellt, sobald eine neue Version auf `main` landet.
 
 ## Windows-Download
 

@@ -1,4 +1,6 @@
-import { DataManager, createEmptyProgress } from "../utils/DataManager";
+import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
+import { regionLabel, systemLabel } from "../ui/constants";
+import { escapeHtml } from "../utils/text";
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { ProgressData } from "../types";
@@ -34,10 +36,9 @@ export class NotesMode {
     this.renderUI();
   }
 
+  /** Immer frisch laden – andere Modi können den Fortschritt inzwischen geändert haben. */
   private async ensureProgressData(): Promise<void> {
-    if (!this.progressData) {
-      this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
-    }
+    this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
   }
 
 
@@ -142,24 +143,24 @@ export class NotesMode {
       return;
     }
 
-    container.innerHTML = filteredEntries.map(([id, note]: [string, any]) => {
+    container.innerHTML = filteredEntries.map(([id, note]) => {
       const structure = structureMap.get(id)!;
       const name = this.settingsManager.getLabel(structure);
       const color = getComputedStyle(document.documentElement).getPropertyValue(`--system-${structure.system}`).trim() || "#888";
       const date = new Date(note.lastModified).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
       return `
-        <div class="note-item" data-id="${id}" style="border-left: 3px solid ${color};">
+        <div class="note-item" data-id="${escapeHtml(id)}" style="border-left: 3px solid ${color};">
           <div class="note-header">
-            <span class="note-structure" style="color: ${color};">${name}</span>
-            <span class="note-system">${structure.system}</span>
+            <span class="note-structure" style="color: ${color};">${escapeHtml(name)}</span>
+            <span class="note-system">${escapeHtml(systemLabel(structure.system))}</span>
           </div>
-          <div class="note-content">${note.content}</div>
+          <div class="note-content">${escapeHtml(note.content)}</div>
           <div class="note-meta">
             <span>${date}</span>
             <div class="note-actions">
-              <button class="btn-icon edit-note" data-id="${id}" title="Bearbeiten">✏️</button>
-              <button class="btn-icon delete-note" data-id="${id}" title="Löschen">🗑️</button>
+              <button class="btn-icon edit-note" data-id="${escapeHtml(id)}" title="Bearbeiten">✏️</button>
+              <button class="btn-icon delete-note" data-id="${escapeHtml(id)}" title="Löschen">🗑️</button>
             </div>
           </div>
         </div>
@@ -174,10 +175,7 @@ export class NotesMode {
     });
     container.querySelectorAll(".note-item").forEach(item => {
       item.addEventListener("click", (e) => {
-        if (!(e.target as HTMLElement).classList.contains("btn-icon")) {
-          this.uiManager.selectStructure((item as HTMLElement).dataset.id!);
-          this.uiManager.togglePanel();
-        }
+        if (!(e.target as HTMLElement).classList.contains("btn-icon")) this.showInAtlas((item as HTMLElement).dataset.id!);
       });
     });
   }
@@ -212,14 +210,14 @@ export class NotesMode {
       const color = getComputedStyle(document.documentElement).getPropertyValue(`--system-${structure.system}`).trim() || "#888";
 
       return `
-        <div class="bookmark-item" data-id="${id}" style="border-left: 3px solid ${color};">
+        <div class="bookmark-item" data-id="${escapeHtml(id)}" style="border-left: 3px solid ${color};">
           <div class="bookmark-header">
-            <span class="bookmark-structure" style="color: ${color};">${name}</span>
-            <span class="bookmark-system">${structure.system}</span>
+            <span class="bookmark-structure" style="color: ${color};">${escapeHtml(name)}</span>
+            <span class="bookmark-system">${escapeHtml(systemLabel(structure.system))}</span>
           </div>
           <div class="bookmark-meta">
-            <span>${structure.region || "Unbekannte Region"}</span>
-            <button class="btn-icon remove-bookmark" data-id="${id}" title="Entfernen">🗑️</button>
+            <span>${escapeHtml(structure.region ? regionLabel(structure.region) : "Unbekannte Region")}</span>
+            <button class="btn-icon remove-bookmark" data-id="${escapeHtml(id)}" title="Entfernen">🗑️</button>
           </div>
         </div>
       `;
@@ -232,10 +230,7 @@ export class NotesMode {
       });
     });
     container.querySelectorAll(".bookmark-item").forEach(item => {
-      item.addEventListener("click", () => {
-        this.uiManager.selectStructure((item as HTMLElement).dataset.id!);
-        this.uiManager.togglePanel();
-      });
+      item.addEventListener("click", () => this.showInAtlas((item as HTMLElement).dataset.id!));
     });
   }
 
@@ -246,10 +241,13 @@ export class NotesMode {
     const note = this.progressData!.notes[structureId] || { content: "" };
 
     const select = document.getElementById("note-structure") as HTMLSelectElement;
-    select.innerHTML = this.dataManager.getAllStructuresSync().map(s => {
-      const n = this.settingsManager.getLabel(s);
-      return `<option value="${s.id}" ${s.id === structureId ? "selected" : ""}>${n} (${s.system})</option>`;
-    }).join("");
+    const options = this.dataManager.getAllStructures()
+      .filter(s => s.id === structureId || isLearnableStructure(s))
+      .map(s => ({ id: s.id, label: `${this.settingsManager.getLabel(s)} (${systemLabel(s.system)})` }))
+      .sort((a, b) => a.label.localeCompare(b.label, "de"));
+    select.innerHTML = options.map(option =>
+      `<option value="${escapeHtml(option.id)}"${option.id === structureId ? " selected" : ""}>${escapeHtml(option.label)}</option>`
+    ).join("");
     select.value = structureId;
 
     (document.getElementById("note-content") as HTMLTextAreaElement).value = note.content;
@@ -266,14 +264,12 @@ export class NotesMode {
       return;
     }
 
-    this.progressData!.notes[structureId] = {
-      content,
-      lastModified: new Date().toISOString(),
-    };
-    this.progressData!.lastUpdated = new Date().toISOString();
-    this.dataManager.saveProgress(this.progressData!);
-    this.hideEditor();
-    this.renderContent();
+    void this.mutate(progress => {
+      progress.notes[structureId] = { content, lastModified: new Date().toISOString() };
+    }).then(() => {
+      this.hideEditor();
+      this.renderContent();
+    });
   }
 
   private hideEditor(): void {
@@ -283,33 +279,27 @@ export class NotesMode {
 
   private deleteNote(structureId: string): void {
     if (confirm("Diese Notiz wirklich löschen?")) {
-      delete this.progressData!.notes[structureId];
-      this.progressData!.lastUpdated = new Date().toISOString();
-      this.dataManager.saveProgress(this.progressData!);
-      this.renderContent();
+      void this.mutate(progress => { delete progress.notes[structureId]; }).then(() => this.renderContent());
     }
   }
 
   private removeBookmark(structureId: string): void {
-    this.progressData!.bookmarks = this.progressData!.bookmarks.filter(b => b !== structureId);
-    this.progressData!.lastUpdated = new Date().toISOString();
-    this.dataManager.saveProgress(this.progressData!);
-    this.renderContent();
+    void this.mutate(progress => {
+      progress.bookmarks = progress.bookmarks.filter(b => b !== structureId);
+    }).then(() => this.renderContent());
   }
 
   async toggleBookmark(structureId: string): Promise<boolean> {
     await this.ready;
-    await this.ensureProgressData();
-    const index = this.progressData!.bookmarks.indexOf(structureId);
-    if (index >= 0) {
-      this.progressData!.bookmarks.splice(index, 1);
-    } else {
-      this.progressData!.bookmarks.push(structureId);
-    }
-    this.progressData!.lastUpdated = new Date().toISOString();
-    await this.dataManager.saveProgress(this.progressData!);
+    let added = false;
+    await this.mutate(progress => {
+      const index = progress.bookmarks.indexOf(structureId);
+      added = index < 0;
+      if (added) progress.bookmarks.push(structureId);
+      else progress.bookmarks.splice(index, 1);
+    });
     if (this.isActive && this.currentTab === "bookmarks") this.renderContent();
-    return index < 0;
+    return added;
   }
 
   async openNoteEditor(structureId: string): Promise<void> {
@@ -320,6 +310,22 @@ export class NotesMode {
       return;
     }
     this.editNote(structureId);
+  }
+
+  /** Wechselt in den Atlas und wählt die Struktur dort aus. */
+  private showInAtlas(structureId: string): void {
+    window.dispatchEvent(new CustomEvent("mode-change", { detail: "atlas" }));
+    this.uiManager.selectStructure(structureId);
+  }
+
+  /** Änderung atomar speichern und lokale Kopie aktualisieren. */
+  private async mutate(change: (progress: ProgressData) => void): Promise<void> {
+    try {
+      this.progressData = await this.dataManager.updateProgress(change);
+    } catch (error) {
+      console.error("Failed to save notes:", error);
+      this.uiManager.showError("Änderung konnte nicht gespeichert werden");
+    }
   }
 
   private cleanup(): void {
