@@ -1,0 +1,223 @@
+/* ==========================================================================
+   Design-Tokens (Hell/Dunkel), Reset und Grundstile
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   CSS Custom Properties (Design Tokens)
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --bg-primary: #f5f7fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #eef2f8;
+  --bg-hover: #e8eef8;
+  --bg-active: #dfe7f5;
+
+  --fg-primary: #202943;
+  --fg-secondary: #52607c;
+  --fg-muted: #7e8ba6;
+  --fg-inverse: #ffffff;
+
+  --accent-primary: #594bd2;
+  --accent-primary-hover: #493bbd;
+  --accent-secondary: #159da8;
+  --accent-success: #278b78;
+  --accent-warning: #b87926;
+  --accent-danger: #c34f62;
+  --accent-info: #258da8;
+
+  --border: #dfe6f0;
+  --border-light: #cbd6e6;
+  --border-focus: #594bd2;
+
+  --shadow-sm: 0 1px 2px rgba(32, 46, 85, 0.05);
+  --shadow-md: 0 4px 12px rgba(32, 46, 85, 0.08);
+  --shadow-lg: 0 8px 24px rgba(32, 46, 85, 0.11);
+  --shadow-xl: 0 16px 48px rgba(32, 46, 85, 0.14);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  --font-sans: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+
+  --sidebar-width: 320px;
+  --sidebar-collapsed-width: 56px;
+  --header-height: 56px;
+  --info-panel-width: 320px;
+
+  /* System Colors */
+  --system-skeletal: #e8c56d;
+  --system-muscular: #e86d6d;
+  --system-articular: #b28aeb;
+  --system-nervous: #6dd5e8;
+  --system-cardiovascular: #e86d9a;
+  --system-respiratory: #9ae86d;
+  --system-digestive: #e8a86d;
+  --system-urinary: #c86de8;
+  --system-reproductive: #e86db8;
+  --system-lymphatic: #6de8a8;
+  --system-endocrine: #e8d46d;
+  --system-integumentary: #a8e86d;
+  --system-sensory: #6da8e8;
+  --system-visceral: #e8a86d;
+  --system-regions: #6da8e8;
+  --system-insertions: #6de8a8;
+  --system-unknown: #8888a0;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-primary: #111824;
+  --bg-secondary: #182231;
+  --bg-tertiary: #202d3d;
+  --bg-hover: #29384a;
+  --bg-active: #34465c;
+
+  --fg-primary: #edf2fa;
+  --fg-secondary: #c3ccdc;
+  --fg-muted: #8d9ab0;
+  --fg-inverse: #111824;
+
+  --accent-primary: #9288f3;
+  --accent-primary-hover: #a69df8;
+  --accent-secondary: #4ebbc5;
+  --accent-success: #58c29e;
+  --accent-warning: #edbd69;
+  --accent-danger: #f17e8e;
+  --accent-info: #64c3db;
+
+  --border: #344254;
+  --border-light: #46576c;
+  --border-focus: #a69df8;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.34);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.42);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg-primary: #111824;
+    --bg-secondary: #182231;
+    --bg-tertiary: #202d3d;
+    --bg-hover: #29384a;
+    --bg-active: #34465c;
+
+    --fg-primary: #edf2fa;
+    --fg-secondary: #c3ccdc;
+    --fg-muted: #8d9ab0;
+    --fg-inverse: #111824;
+
+    --accent-primary: #9288f3;
+    --accent-primary-hover: #a69df8;
+    --accent-secondary: #4ebbc5;
+    --accent-success: #58c29e;
+    --accent-warning: #edbd69;
+    --accent-danger: #f17e8e;
+    --accent-info: #64c3db;
+
+    --border: #344254;
+    --border-light: #46576c;
+    --border-focus: #a69df8;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.22);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.34);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.42);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reset & Base
+   --------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--fg-primary);
+  background: var(--bg-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-primary);
+  color: var(--fg-inverse);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-muted);
+}

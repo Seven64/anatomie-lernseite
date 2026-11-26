@@ -1,8 +1,9 @@
-import { DataManager } from "../utils/DataManager";
+import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure, BodySystem, QuizResult, ProgressData } from "../types";
-import { DRACO_DECODER_PATH, frameCameraToObject } from "../utils/three";
-import * as THREE from "three";
+import { regionLabel, systemLabel } from "../ui/constants";
+import { PreviewViewer } from "../utils/PreviewViewer";
+import { escapeHtml, shuffle } from "../utils/text";
 
 type QuizModeType = "locate" | "identify";
 
@@ -21,6 +22,9 @@ export class QuizMode {
   private options: Structure[] = [];
   private isActive: boolean = false;
   private progressData: ProgressData | null = null;
+  private viewer: PreviewViewer | null = null;
+  private answered = false;
+  private nextTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(dataManager: DataManager, settingsManager: SettingsManager) {
     this.dataManager = dataManager;
@@ -37,23 +41,12 @@ export class QuizMode {
   }
 
   private async initMode(): Promise<void> {
-    this.progressData = await this.dataManager.loadProgress() || this.getEmptyProgress();
+    this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
     this.bindFilters();
     this.bindQuizEvents();
     this.applyFilters();
   }
 
-  private getEmptyProgress(): ProgressData {
-    return {
-      version: "1.0",
-      userId: "local",
-      quizResults: [],
-      flashcardProgress: [],
-      notes: {},
-      bookmarks: [],
-      lastUpdated: new Date().toISOString(),
-    };
-  }
 
   private bindFilters(): void {
     const container = document.getElementById("canvas-container")!;
@@ -72,11 +65,11 @@ export class QuizMode {
           </div>
           <select class="select" id="filter-system" style="min-width: 180px;">
             <option value="all">Alle Systeme</option>
-            ${systems.map(s => `<option value="${s}">${s}</option>`).join("")}
+            ${systems.map(s => `<option value="${s}">${escapeHtml(systemLabel(s))}</option>`).join("")}
           </select>
           <select class="select" id="filter-region" style="min-width: 180px;">
             <option value="all">Alle Regionen</option>
-            ${regions.map(r => `<option value="${r}">${r}</option>`).join("")}
+            ${regions.map(r => `<option value="${escapeHtml(r!)}">${escapeHtml(regionLabel(r!))}</option>`).join("")}
           </select>
         </div>
         <div class="quiz-progress">
@@ -123,31 +116,34 @@ export class QuizMode {
   }
 
   private applyFilters(): void {
-    this.structures = this.dataManager.getAllStructuresSync().filter(s => {
+    this.structures = this.dataManager.getAllStructures().filter(s => {
+      if (!isLearnableStructure(s)) return false;
       if (this.filterSystem !== "all" && s.system !== this.filterSystem) return false;
       if (this.filterRegion !== "all" && s.region !== this.filterRegion) return false;
       return true;
     });
-    this.shuffleArray(this.structures);
+    shuffle(this.structures);
     this.currentQuestionIndex = 0;
     this.score = 0;
     this.total = 0;
     if (this.isActive) this.nextQuestion();
   }
 
-  private async nextQuestion(): Promise<void> {
+  private async nextQuestion(attempt = 0): Promise<void> {
+    if (this.nextTimer) clearTimeout(this.nextTimer);
+    this.nextTimer = null;
     if (this.structures.length === 0) {
       document.getElementById("quiz-question")!.textContent = "Keine Strukturen für diese Filter";
       return;
     }
 
     if (this.currentQuestionIndex >= this.structures.length) {
-      this.shuffleArray(this.structures);
+      shuffle(this.structures);
       this.currentQuestionIndex = 0;
     }
 
     this.currentStructure = this.structures[this.currentQuestionIndex++];
-    this.total++;
+    this.answered = false;
 
     if (this.currentMode === "locate") {
       const name = this.settingsManager.getLabel(this.currentStructure);
@@ -155,199 +151,76 @@ export class QuizMode {
       document.getElementById("quiz-options")!.style.display = "none";
       document.getElementById("free-text-input")!.style.display = "none";
       document.getElementById("submit-answer")!.style.display = "none";
-      await this.loadLocateScene(this.currentStructure);
     } else {
       document.getElementById("quiz-question")!.textContent = "Wie heißt die markierte Struktur?";
       document.getElementById("quiz-options")!.style.display = "grid";
       document.getElementById("free-text-input")!.style.display = "none";
       document.getElementById("submit-answer")!.style.display = "none";
-      await this.loadIdentifyScene(this.currentStructure);
     }
 
     document.getElementById("quiz-feedback")!.style.display = "none";
+    // Strukturen ohne Geometrie überspringen (begrenzt, um Endlosschleifen zu vermeiden).
+    if (!(await this.loadScene(this.currentStructure)) && attempt < 10 && this.isActive) {
+      return this.nextQuestion(attempt + 1);
+    }
+    this.total++;
     this.updateProgress();
   }
 
-  private async loadLocateScene(structure: Structure): Promise<void> {
-    const canvasContainer = document.getElementById("quiz-canvas")!;
-    canvasContainer.innerHTML = "";
-
+  private async loadScene(structure: Structure): Promise<boolean> {
     const loading = document.getElementById("quiz-loading")!;
     loading.style.display = "flex";
-
     try {
-      const response = await fetch(`./models/${structure.glbFile}`);
-      if (!response.ok) throw new Error("GLB not found");
-      const arrayBuffer = await response.arrayBuffer();
-
-      const { GLTFLoader } = await import("three/examples/jsm/loaders/GLTFLoader.js");
-      const { DRACOLoader } = await import("three/examples/jsm/loaders/DRACOLoader.js");
-      const loader = new GLTFLoader();
-      const draco = new DRACOLoader();
-      draco.setDecoderPath(DRACO_DECODER_PATH);
-      loader.setDRACOLoader(draco);
-
-      const gltf = await loader.parseAsync(arrayBuffer, structure.glbFile.split('/')[0] + '/');
-
-      const scene = new THREE.Scene();
-      const background = getComputedStyle(document.documentElement).getPropertyValue("--bg-primary").trim();
-      scene.background = new THREE.Color(background || "#f5f7fb");
-
-      const camera = new THREE.PerspectiveCamera(50, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 100);
-      camera.position.set(0, 0, 2);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      canvasContainer.appendChild(renderer.domElement);
-
-      const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambient);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-      dirLight.position.set(5, 10, 7);
-      dirLight.castShadow = true;
-      scene.add(dirLight);
-
-      const targetMesh = gltf.scene.getObjectByName(structure.objectName) as THREE.Mesh;
-      if (targetMesh) {
-        targetMesh.material = new THREE.MeshStandardMaterial({
-          color: 0xc89040,
-          emissive: 0xc89040,
-          emissiveIntensity: 0.2,
-        });
-        targetMesh.userData.isTarget = true;
-      }
-
-      scene.add(gltf.scene);
-
-      const raycaster = new THREE.Raycaster();
-      const mouse = new THREE.Vector2();
-
-      const handleClick = (event: MouseEvent) => {
-        if (!this.isActive || this.currentMode !== "locate") return;
-        const rect = renderer.domElement.getBoundingClientRect();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        if (intersects.length > 0) {
-          const hit = intersects[0].object;
-          if (hit.userData.isTarget) {
-            this.recordResult(true);
-            this.showFeedback(true, structure.nameLatin);
-            setTimeout(() => this.nextQuestion(), 1500);
-          } else {
-            this.showFeedback(false, structure.nameLatin);
-          }
-        }
-      };
-
-      renderer.domElement.addEventListener("click", handleClick);
-
-      const controls = new (await import("three/examples/jsm/controls/OrbitControls.js")).OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      frameCameraToObject(camera, controls, gltf.scene);
-
-      const animate = () => {
-        if (!this.isActive) { renderer.dispose(); renderer.domElement.removeEventListener("click", handleClick); return; }
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-      };
-      animate();
-
-      loading.style.display = "none";
+      this.viewer ??= this.createViewer();
+      if (!(await this.viewer.show(structure, this.currentMode === "identify"))) return false;
+      if (this.currentMode === "identify") await this.generateOptions(structure);
+      return true;
     } catch (error) {
       console.error("Failed to load quiz model:", error);
+      document.getElementById("quiz-question")!.textContent = "Modell konnte nicht geladen werden";
+      return true;
+    } finally {
       loading.style.display = "none";
-      canvasContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--fg-muted);">Modell konnte nicht geladen werden</div>`;
     }
   }
 
-  private async loadIdentifyScene(structure: Structure): Promise<void> {
-    const canvasContainer = document.getElementById("quiz-canvas")!;
-    canvasContainer.innerHTML = "";
-
-    const loading = document.getElementById("quiz-loading")!;
-    loading.style.display = "flex";
-
-    try {
-      const response = await fetch(`./models/${structure.glbFile}`);
-      if (!response.ok) throw new Error("GLB not found");
-      const arrayBuffer = await response.arrayBuffer();
-
-      const { GLTFLoader } = await import("three/examples/jsm/loaders/GLTFLoader.js");
-      const { DRACOLoader } = await import("three/examples/jsm/loaders/DRACOLoader.js");
-      const loader = new GLTFLoader();
-      const draco = new DRACOLoader();
-      draco.setDecoderPath(DRACO_DECODER_PATH);
-      loader.setDRACOLoader(draco);
-
-      const gltf = await loader.parseAsync(arrayBuffer, structure.glbFile.split('/')[0] + '/');
-
-      const scene = new THREE.Scene();
-      const background = getComputedStyle(document.documentElement).getPropertyValue("--bg-primary").trim();
-      scene.background = new THREE.Color(background || "#f5f7fb");
-
-      const camera = new THREE.PerspectiveCamera(50, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 100);
-      camera.position.set(0, 0, 2);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      canvasContainer.appendChild(renderer.domElement);
-
-      const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambient);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-      dirLight.position.set(5, 10, 7);
-      dirLight.castShadow = true;
-      scene.add(dirLight);
-
-      const targetMesh = gltf.scene.getObjectByName(structure.objectName) as THREE.Mesh;
-      if (targetMesh) {
-        targetMesh.material = new THREE.MeshStandardMaterial({
-          color: 0xc89040,
-          emissive: 0xc89040,
-          emissiveIntensity: 0.2,
-        });
+  private createViewer(): PreviewViewer {
+    const viewer = new PreviewViewer(document.getElementById("quiz-canvas")!);
+    viewer.canvas.addEventListener("click", event => {
+      if (!this.isActive || this.currentMode !== "locate" || !this.currentStructure || this.answered) return;
+      const hit = viewer.hitsTarget(event);
+      if (hit === null) return;
+      const name = this.settingsManager.getLabel(this.currentStructure);
+      if (hit) {
+        this.answered = true;
+        this.recordResult(true);
+        this.showFeedback(true, name);
+        this.scheduleNextQuestion();
+      } else {
+        this.showFeedback(false, name);
       }
+    });
+    return viewer;
+  }
 
-      scene.add(gltf.scene);
-
-      const controls = new (await import("three/examples/jsm/controls/OrbitControls.js")).OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      frameCameraToObject(camera, controls, gltf.scene);
-
-      await this.generateOptions(structure);
-
-      const animate = () => {
-        if (!this.isActive) { renderer.dispose(); return; }
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-      };
-      animate();
-
-      loading.style.display = "none";
-    } catch (error) {
-      console.error("Failed to load quiz model:", error);
-      loading.style.display = "none";
-      canvasContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--fg-muted);">Modell konnte nicht geladen werden</div>`;
-    }
+  private scheduleNextQuestion(): void {
+    if (this.nextTimer) clearTimeout(this.nextTimer);
+    this.nextTimer = setTimeout(() => {
+      this.nextTimer = null;
+      if (this.isActive) void this.nextQuestion();
+    }, 1500);
   }
 
   private async generateOptions(correct: Structure): Promise<void> {
     const container = document.getElementById("quiz-options")!;
-    const sameSystem = (await this.dataManager.getStructuresBySystem(correct.system)).filter(s => s.id !== correct.id);
-    this.shuffleArray(sameSystem);
+    const sameSystem = this.dataManager.getStructuresBySystemSync(correct.system)
+      .filter(s => s.id !== correct.id && isLearnableStructure(s));
+    shuffle(sameSystem);
     this.options = [correct, ...sameSystem.slice(0, 3)];
-    this.shuffleArray(this.options);
+    shuffle(this.options);
 
     container.innerHTML = this.options.map((opt, i) => `
-      <button class="quiz-option" data-index="${i}">
-        ${this.settingsManager.getLabel(opt)}
-      </button>
+      <button class="quiz-option" data-index="${i}">${escapeHtml(this.settingsManager.getLabel(opt))}</button>
     `).join("");
 
     container.querySelectorAll(".quiz-option").forEach(btn => {
@@ -364,14 +237,15 @@ export class QuizMode {
   private checkAnswer(): void {
     if (this.currentMode === "identify") {
       const selected = document.querySelector(".quiz-option.selected");
-      if (!selected) return;
+      if (!selected || this.answered) return;
+      this.answered = true;
       const index = parseInt((selected as HTMLElement).dataset.index!);
       const isCorrect = this.options[index].id === this.currentStructure!.id;
       this.recordResult(isCorrect);
-      this.showFeedback(isCorrect, this.currentStructure!.nameLatin);
+      this.showFeedback(isCorrect, this.settingsManager.getLabel(this.currentStructure!));
       selected.classList.add(isCorrect ? "correct" : "incorrect");
       document.querySelector(`.quiz-option[data-index="${this.options.findIndex(o => o.id === this.currentStructure!.id)}"]`)!.classList.add("correct");
-      setTimeout(() => this.nextQuestion(), 1500);
+      this.scheduleNextQuestion();
     }
   }
 
@@ -386,7 +260,9 @@ export class QuizMode {
       responseTime: 0,
     };
     this.progressData!.quizResults.push(result);
-    this.dataManager.saveProgress(this.progressData!);
+    void this.dataManager.saveProgress(this.progressData!).catch(error =>
+      console.error("Failed to save quiz result:", error)
+    );
   }
 
   private showFeedback(correct: boolean, correctName: string): void {
@@ -396,7 +272,7 @@ export class QuizMode {
       <span class="${correct ? "feedback-correct" : "feedback-incorrect"}">
         ${correct ? "✓ Richtig!" : "✗ Falsch"}
       </span>
-      <span class="feedback-detail">${correct ? "" : `Richtige Antwort: ${correctName}`}</span>
+      <span class="feedback-detail">${correct ? "" : `Richtige Antwort: ${escapeHtml(correctName)}`}</span>
     `;
   }
 
@@ -407,15 +283,11 @@ export class QuizMode {
     scoreEl.textContent = `${this.score} / ${this.total}`;
   }
 
-  private shuffleArray<T>(array: T[]): void {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
   private cleanup(): void {
-    const container = document.getElementById("canvas-container")!;
-    container.innerHTML = "";
+    if (this.nextTimer) clearTimeout(this.nextTimer);
+    this.nextTimer = null;
+    this.viewer?.dispose();
+    this.viewer = null;
+    document.getElementById("canvas-container")!.innerHTML = "";
   }
 }

@@ -1,0 +1,130 @@
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 280px;
+    --info-panel-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-height) auto 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
+  }
+
+  .app-layout.sidebar-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 40vh;
+    position: relative;
+    z-index: 20;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  .sidebar-header {
+    display: none;
+  }
+
+  .sidebar-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-secondary);
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-sidebar.open .sidebar-header {
+    display: block;
+  }
+
+  .app-sidebar.open .sidebar-content {
+    display: block;
+  }
+
+  .info-panel {
+    width: 100%;
+    max-width: none;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 60vh;
+    max-height: 60vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    transform: translateY(100%);
+  }
+
+  .info-panel.open {
+    transform: translateY(0);
+  }
+
+  .header-search input {
+    width: 160px;
+  }
+
+  .mode-tab span {
+    display: none;
+  }
+
+  .mode-tab {
+    padding: var(--spacing-2);
+    min-width: 40px;
+  }
+
+  .quiz-options {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-base: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 22px;
+  }
+
+  .btn {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  .modal {
+    margin: var(--spacing-3);
+    max-height: calc(100vh - var(--spacing-6));
+  }
+
+  .toast {
+    left: var(--spacing-3);
+    right: var(--spacing-3);
+    min-width: auto;
+    max-width: none;
+  }
+}

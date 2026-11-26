@@ -1,4 +1,4 @@
-import { DataManager } from "../utils/DataManager";
+import { DataManager, createEmptyProgress } from "../utils/DataManager";
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure, BodySystem, ProgressData } from "../types";
@@ -25,21 +25,10 @@ export class ProgressMode {
   }
 
   private async initMode(): Promise<void> {
-    this.progressData = await this.dataManager.loadProgress() || this.getEmptyProgress();
+    this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
     this.renderDashboard();
   }
 
-  private getEmptyProgress(): ProgressData {
-    return {
-      version: "1.0",
-      userId: "local",
-      quizResults: [],
-      flashcardProgress: [],
-      notes: {},
-      bookmarks: [],
-      lastUpdated: new Date().toISOString(),
-    };
-  }
 
   private renderDashboard(): void {
     const container = document.getElementById("canvas-container")!;
@@ -49,8 +38,6 @@ export class ProgressMode {
   }
 
   private getDashboardHTML(): string {
-    this.dataManager.getAllStructuresSync();
-
     return `
       <div style="height: 100%; overflow-y: auto; padding: 20px;">
         <h2 style="margin-bottom: 24px; font-weight: 600;">Lernfortschritt</h2>
@@ -310,7 +297,7 @@ export class ProgressMode {
           this.progressData = data;
           this.dataManager.saveProgress(this.progressData!);
           this.updateStats();
-          this.uiManager.showError("Fortschritt erfolgreich importiert!");
+          this.uiManager.showToast("Fortschritt erfolgreich importiert", "success");
         } else {
           this.uiManager.showError("Ungültiges Dateiformat");
         }
@@ -324,7 +311,7 @@ export class ProgressMode {
 
   private confirmReset(): void {
     if (confirm("Wirklich allen Fortschritt zurücksetzen? Dies kann nicht rückgängig gemacht werden.")) {
-      this.progressData = this.getEmptyProgress();
+      this.progressData = createEmptyProgress();
       this.dataManager.saveProgress(this.progressData!);
       this.updateStats();
     }

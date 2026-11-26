@@ -1,4 +1,4 @@
-import { DataManager } from "../utils/DataManager";
+import { DataManager, createEmptyProgress } from "../utils/DataManager";
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { ProgressData } from "../types";
@@ -36,21 +36,10 @@ export class NotesMode {
 
   private async ensureProgressData(): Promise<void> {
     if (!this.progressData) {
-      this.progressData = await this.dataManager.loadProgress() || this.getEmptyProgress();
+      this.progressData = await this.dataManager.loadProgress() ?? createEmptyProgress();
     }
   }
 
-  private getEmptyProgress(): ProgressData {
-    return {
-      version: "1.0",
-      userId: "local",
-      quizResults: [],
-      flashcardProgress: [],
-      notes: {},
-      bookmarks: [],
-      lastUpdated: new Date().toISOString(),
-    };
-  }
 
   private renderUI(): void {
     const container = document.getElementById("canvas-container")!;

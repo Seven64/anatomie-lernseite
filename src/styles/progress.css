@@ -1,0 +1,144 @@
+/* ---------------------------------------------------------------------------
+   Progress Dashboard
+   --------------------------------------------------------------------------- */
+.progress-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
+.progress-card {
+  padding: var(--spacing-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.progress-card:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+.progress-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.progress-card-title {
+  font-size: var(--font-size-sm);
+  color: var(--fg-secondary);
+  font-weight: 500;
+}
+
+.progress-card-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* System Progress */
+.progress-system-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.progress-system-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.progress-system-color {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.progress-system-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.progress-system-name {
+  font-weight: 500;
+  color: var(--fg-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.progress-system-bar {
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-system-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-normal);
+}
+
+.progress-system-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--fg-muted);
+  text-align: right;
+  min-width: 140px;
+}
+
+/* Weak Structures */
+.weak-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.weak-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.weak-item:hover {
+  border-color: var(--border-light);
+  background: var(--bg-hover);
+}
+
+.weak-item-color {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.weak-item-name {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--fg-primary);
+}
+
+.weak-item-accuracy {
+  font-size: var(--font-size-sm);
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
