@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { BodySystem, Structure } from "../../types";
-import { DataManager } from "../../utils/DataManager";
+import { DataManager, isTitleNode } from "../../utils/DataManager";
 import { createGltfLoader, disposeObject, getNodeName } from "../../utils/three";
 
 const keyOf = (glbFile: string, objectName: string) => `${glbFile}\0${objectName}`;
@@ -91,6 +91,8 @@ export class ModelRegistry {
     });
 
     structures.forEach(structure => {
+      // Titel-Schriftzüge der Z-Anatomy-Gruppen bleiben verborgen.
+      if (isTitleNode(structure.objectName)) return;
       const objects = objectsByKey.get(keyOf(structure.glbFile, structure.objectName));
       if (!objects) return;
       const meshes: THREE.Mesh[] = [];

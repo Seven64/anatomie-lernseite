@@ -33,7 +33,7 @@ const DB_VERSION = 3;
 const STRUCTURES_STORE = "structures";
 const MANIFEST_STORE = "manifest";
 const MANIFEST_VERSION_KEY = "structures-version";
-const STRUCTURES_VERSION = "1.1";
+const STRUCTURES_VERSION = "1.2";
 const PROGRESS_KEY = "user-progress";
 const SETTINGS_KEY = "user-settings";
 const CACHE_STORE = "cache";
@@ -52,6 +52,11 @@ export { STRUCTURES_VERSION };
  */
 export function isLearnableStructure(structure: Structure): boolean {
   return Boolean(structure.nameLatin) && !/\.[gj]$/.test(structure.nameLatin);
+}
+
+/** Gruppenknoten („.g“) – ihre Meshes sind 3D-Schriftzüge (z. B. „SKELETAL SYSTEM“). */
+export function isTitleNode(name: string): boolean {
+  return /\.g$/.test(name);
 }
 
 /** Leerer Lernfortschritt – gemeinsame Vorlage für alle Modi. */

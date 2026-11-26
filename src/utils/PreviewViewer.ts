@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Structure } from "../types";
+import { isTitleNode } from "./DataManager";
 import {
   addStudioLights,
   collectMeshes,
   createGltfLoader,
   createHighlightMaterial,
   findNodesByName,
+  getNodeName,
   frameCameraToBounds,
   frameCameraToObject,
   readCssColor,
@@ -83,6 +85,11 @@ export class PreviewViewer {
     if (this.model) this.scene.remove(this.model);
     this.model = source.clone(true);
     this.model.updateMatrixWorld(true);
+    // Titel-Schriftzüge der Z-Anatomy-Gruppen ausblenden.
+    this.model.traverse(child => {
+      const name = getNodeName(child);
+      if (name && isTitleNode(name)) child.visible = false;
+    });
     this.scene.add(this.model);
 
     const targetNodes = findNodesByName(this.model, structure.objectName);

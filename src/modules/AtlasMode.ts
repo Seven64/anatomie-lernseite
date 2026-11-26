@@ -3,7 +3,7 @@ import { DataManager } from "../utils/DataManager";
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { BodySystem, CuttingAxis, Structure } from "../types";
-import { LAYERED_SYSTEMS, SYSTEM_LABELS } from "../ui/constants";
+import { INITIALLY_HIDDEN, LAYERED_SYSTEMS, SYSTEM_LABELS } from "../ui/constants";
 import { computeVisibleBounds, createHighlightMaterial, frameCameraToBounds, readCssColor } from "../utils/three";
 import { AtlasScene } from "./atlas/AtlasScene";
 import { ModelRegistry } from "./atlas/ModelRegistry";
@@ -285,10 +285,17 @@ export class AtlasMode {
   }
 
   async onSystemToggled(system: BodySystem, visible: boolean): Promise<void> {
+    const wasVisible = this.systemVisibility.get(system) ?? false;
     this.systemVisibility.set(system, visible);
-    this.dataManager.getStructuresBySystemSync(system).forEach(structure =>
-      visible ? this.hiddenIds.delete(structure.id) : this.hiddenIds.add(structure.id)
-    );
+    this.uiManager.setSystemVisibility(system, visible);
+    // Beim ersten Einblenden verdeckende Hüllen (z. B. Faszien) zunächst verbergen;
+    // ein erneuter Klick auf das teilweise sichtbare System zeigt dann alles.
+    const initiallyHidden = !wasVisible ? INITIALLY_HIDDEN[system] : undefined;
+    this.dataManager.getStructuresBySystemSync(system).forEach(structure => {
+      const hide = !visible || Boolean(initiallyHidden?.test(structure.nameLatin));
+      if (hide) this.hiddenIds.add(structure.id);
+      else this.hiddenIds.delete(structure.id);
+    });
     if (!visible) {
       this.uiManager.hideHoverLabel();
       const selected = this.selectedId ? this.dataManager.getStructureSync(this.selectedId) : undefined;

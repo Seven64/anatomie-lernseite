@@ -12,12 +12,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm test && npm run data:export",
+    "check": "npm run typecheck && npm test && npm run data:export && node scripts/sync-structures.js --check",
     "desktop:dir": "npm run build && electron-builder --dir",
     "desktop:win": "npm run build && electron-builder --win nsis",
     "data:export": "node scripts/export-data.js",
     "icon": "sh scripts/make-icon.sh",
-    "test:blender": "blender --background --python scripts/blender/export_gltf.py"
+    "test:blender": "blender --background --python scripts/blender/export_gltf.py",
+    "data:sync": "node scripts/sync-structures.js"
   },
   "dependencies": {
     "idb": "^8.0.0",
