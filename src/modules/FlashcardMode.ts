@@ -1,8 +1,9 @@
 import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure, FlashcardProgress, ProgressData } from "../types";
+import { regionLabel, systemLabel } from "../ui/constants";
 import { applySm2, createFlashcardProgress, isDue } from "../utils/sm2";
-import { escapeHtml, shuffle } from "../utils/text";
+import { escapeHtml, formatStructureName, shuffle } from "../utils/text";
 
 export class FlashcardMode {
   private dataManager: DataManager;
@@ -141,11 +142,11 @@ export class FlashcardMode {
 
     document.getElementById("card-front")!.textContent = frontName;
     document.getElementById("card-back")!.innerHTML = `
-      <div><strong>Latein:</strong> ${escapeHtml(structure.nameLatin)}</div>
-      <div><strong>Deutsch:</strong> ${escapeHtml(structure.nameDe || "—")}</div>
-      <div><strong>Englisch:</strong> ${escapeHtml(structure.nameEn || "—")}</div>
-      <div style="margin-top: 12px;"><strong>System:</strong> ${escapeHtml(structure.system)}</div>
-      <div><strong>Region:</strong> ${escapeHtml(structure.region || "—")}</div>
+      <div><strong>Name:</strong> ${escapeHtml(formatStructureName(structure.nameLatin))}</div>
+      ${structure.nameDe ? `<div><strong>Deutsch:</strong> ${escapeHtml(formatStructureName(structure.nameDe))}</div>` : ""}
+      ${structure.nameEn ? `<div><strong>Englisch:</strong> ${escapeHtml(formatStructureName(structure.nameEn))}</div>` : ""}
+      <div style="margin-top: 12px;"><strong>System:</strong> ${escapeHtml(systemLabel(structure.system))}</div>
+      <div><strong>Region:</strong> ${escapeHtml(structure.region ? regionLabel(structure.region) : "—")}</div>
     `;
 
     document.getElementById("card-stats")!.style.display = "none";

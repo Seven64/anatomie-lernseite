@@ -1,4 +1,5 @@
 import { UserSettings, BodySystem } from "../types";
+import { formatStructureName } from "./text";
 
 const DEFAULT_SETTINGS: UserSettings = {
   theme: "light",
@@ -88,13 +89,11 @@ export class SettingsManager {
     return () => this.listeners.delete(listener);
   }
 
+  /** Anzeigename in der gewählten Sprache, ohne interne Z-Anatomy-Kennungen. */
   getLabel(structure: { nameLatin: string; nameDe?: string; nameEn?: string }): string {
     const lang = this.settings.labelLanguage;
-    switch (lang) {
-      case "de": return structure.nameDe || structure.nameLatin;
-      case "en": return structure.nameEn || structure.nameLatin;
-      default: return structure.nameLatin;
-    }
+    const name = lang === "de" ? structure.nameDe : lang === "en" ? structure.nameEn : undefined;
+    return formatStructureName(name || structure.nameLatin);
   }
 
   getSystemColor(system: BodySystem): string {

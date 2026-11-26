@@ -37,7 +37,12 @@ const STRUCTURES_VERSION = "1.1";
 const PROGRESS_KEY = "user-progress";
 const SETTINGS_KEY = "user-settings";
 const CACHE_STORE = "cache";
-const LEGACY_SEED_IDS = new Set(["skull", "femur", "heart", "brain"]);
+const DB_OPEN_TIMEOUT_MS = 4000;
+
+/** Wird ausgelöst, wenn ein anderer Tab (ältere Version) das Datenbank-Upgrade blockiert. */
+export const DB_BLOCKED_EVENT = "db-blocked";
+/** Wird ausgelöst, wenn ein anderer Tab eine neuere App-Version geöffnet hat. */
+export const DB_OUTDATED_EVENT = "db-outdated";
 
 export { STRUCTURES_VERSION };
 
@@ -70,9 +75,17 @@ export class DataManager {
   private dbReady: Promise<void>;
 
   constructor() {
-    this.dbReady = this.initDB();
+    this.dbReady = this.initDB().catch(error => {
+      console.error("IndexedDB unavailable:", error);
+      this.db = null;
+    });
   }
 
+  /**
+   * Öffnet die Datenbank. Ist noch ein Tab mit einer älteren Version offen, blockiert
+   * dieser das Upgrade („blocked“) – dann informieren wir die Oberfläche. Umgekehrt geben
+   * wir die eigene Verbindung frei, sobald ein anderer Tab upgraden will („blocking“).
+   */
   private async initDB(): Promise<void> {
     this.db = await openDB<AnatomyDB>(DB_NAME, DB_VERSION, {
       upgrade(db, oldVersion) {
@@ -90,6 +103,17 @@ export class DataManager {
           db.createObjectStore(CACHE_STORE, { keyPath: "id" });
         }
       },
+      blocked: () => {
+        window.dispatchEvent(new CustomEvent(DB_BLOCKED_EVENT));
+      },
+      blocking: () => {
+        this.db?.close();
+        this.db = null;
+        window.dispatchEvent(new CustomEvent(DB_OUTDATED_EVENT));
+      },
+      terminated: () => {
+        this.db = null;
+      },
     });
   }
 
@@ -99,13 +123,16 @@ export class DataManager {
     return this.db;
   }
 
+  /** Wartet höchstens `timeoutMs` auf die Datenbank; null, wenn sie (noch) nicht verfügbar ist. */
+  private async tryDB(timeoutMs: number): Promise<IDBPDatabase<AnatomyDB> | null> {
+    const timeout = new Promise<null>(resolve => setTimeout(() => resolve(null), timeoutMs));
+    return Promise.race([this.dbReady.then(() => this.db), timeout]);
+  }
+
   async saveStructures(structures: Structure[]): Promise<void> {
     const db = await this.ensureDB();
     const tx = db.transaction(STRUCTURES_STORE, "readwrite");
-    for (const structure of structures) {
-      await tx.store.put(structure);
-    }
-    await tx.done;
+    await Promise.all([...structures.map(structure => tx.store.put(structure)), tx.done]);
     this.setStructuresCache(structures);
   }
 
@@ -120,51 +147,59 @@ export class DataManager {
     });
   }
 
+  private async fetchManifest(): Promise<Structure[]> {
+    const response = await fetch("./structures.json");
+    if (!response.ok) throw new Error(`Failed to load structures.json: ${response.status}`);
+    const manifest: { version?: string; structures?: Structure[] } = await response.json();
+    if (manifest.version !== STRUCTURES_VERSION) {
+      throw new Error(`Unexpected structures.json version: ${manifest.version ?? "missing"}`);
+    }
+    if (!Array.isArray(manifest.structures) || manifest.structures.length === 0) {
+      throw new Error("structures.json does not contain any structures");
+    }
+    return manifest.structures;
+  }
+
+  /**
+   * Lädt die Strukturen aus IndexedDB oder – bei neuer Datenversion bzw. leerer DB –
+   * aus structures.json. Ist die Datenbank blockiert oder nicht verfügbar, arbeitet die
+   * App mit den Daten aus structures.json im Speicher weiter, statt leer zu bleiben.
+   */
   async loadStructures(): Promise<Structure[]> {
     if (this.structuresCache) return this.structuresCache;
 
-    const db = await this.ensureDB();
-    const storedStructures = await db.getAll(STRUCTURES_STORE);
-    const isLegacySeed = storedStructures.length === LEGACY_SEED_IDS.size &&
-      storedStructures.every(structure => LEGACY_SEED_IDS.has(structure.id));
-    const storedManifest = await db.get(MANIFEST_STORE, MANIFEST_VERSION_KEY);
-
-    if (storedStructures.length === 0 || isLegacySeed || storedManifest?.version !== STRUCTURES_VERSION) {
-      const response = await fetch("./structures.json");
-      if (!response.ok) {
-        throw new Error(`Failed to load structures.json: ${response.status}`);
-      }
-
-      const manifest: { version?: string; structures?: Structure[] } = await response.json();
-      if (manifest.version !== STRUCTURES_VERSION) {
-        throw new Error(`Unexpected structures.json version: ${manifest.version ?? "missing"}`);
-      }
-      if (!Array.isArray(manifest.structures) || manifest.structures.length === 0) {
-        throw new Error("structures.json does not contain any structures");
-      }
-
-      const replaceStoredStructures = storedStructures.length === 0 || isLegacySeed;
-      const storedIds = new Set(storedStructures.map(structure => structure.id));
-      const newStructures = replaceStoredStructures
-        ? manifest.structures
-        : manifest.structures.filter(structure => !storedIds.has(structure.id));
-      const tx = db.transaction([STRUCTURES_STORE, MANIFEST_STORE], "readwrite");
-      if (replaceStoredStructures) {
-        await tx.objectStore(STRUCTURES_STORE).clear();
-      }
-      for (const structure of newStructures) {
-        await tx.objectStore(STRUCTURES_STORE).put(structure);
-      }
-      await tx.objectStore(MANIFEST_STORE).put({ id: MANIFEST_VERSION_KEY, version: STRUCTURES_VERSION });
-      await tx.done;
-      this.setStructuresCache(replaceStoredStructures
-        ? manifest.structures
-        : storedStructures.concat(newStructures));
-    } else {
-      this.setStructuresCache(storedStructures);
+    const db = await this.tryDB(DB_OPEN_TIMEOUT_MS);
+    if (!db) {
+      console.warn("IndexedDB not available in time – using structures.json without local cache");
+      this.setStructuresCache(await this.fetchManifest());
+      return this.structuresCache ?? [];
     }
 
-    return this.structuresCache ?? [];
+    const [storedStructures, storedManifest] = await Promise.all([
+      db.getAll(STRUCTURES_STORE),
+      db.get(MANIFEST_STORE, MANIFEST_VERSION_KEY),
+    ]);
+    if (storedStructures.length > 0 && storedManifest?.version === STRUCTURES_VERSION) {
+      this.setStructuresCache(storedStructures);
+      return storedStructures;
+    }
+
+    // Strukturdaten sind statisch: bei neuer Version vollständig ersetzen.
+    const structures = await this.fetchManifest();
+    this.setStructuresCache(structures);
+    try {
+      const tx = db.transaction([STRUCTURES_STORE, MANIFEST_STORE], "readwrite");
+      const store = tx.objectStore(STRUCTURES_STORE);
+      await store.clear();
+      await Promise.all([
+        ...structures.map(structure => store.put(structure)),
+        tx.objectStore(MANIFEST_STORE).put({ id: MANIFEST_VERSION_KEY, version: STRUCTURES_VERSION }),
+        tx.done,
+      ]);
+    } catch (error) {
+      console.error("Failed to cache structures in IndexedDB:", error);
+    }
+    return structures;
   }
 
   async getStructure(id: string): Promise<Structure | undefined> {
@@ -208,7 +243,8 @@ export class DataManager {
   }
 
   async loadProgress(): Promise<ProgressData | null> {
-    const db = await this.ensureDB();
+    const db = await this.tryDB(DB_OPEN_TIMEOUT_MS);
+    if (!db) return null;
     const data = await db.get("progress", PROGRESS_KEY);
     if (!data) return null;
     const { id: _id, ...progress } = data;
@@ -217,14 +253,15 @@ export class DataManager {
 
   /** Lädt einen Eintrag aus dem generischen Cache-Store (z. B. Muskelschichten). */
   async loadCache<T>(key: string): Promise<T | null> {
-    const db = await this.ensureDB();
+    const db = await this.tryDB(DB_OPEN_TIMEOUT_MS);
+    if (!db) return null;
     const entry = await db.get(CACHE_STORE, key);
     return entry ? (entry.data as T) : null;
   }
 
   async saveCache(key: string, data: unknown): Promise<void> {
-    const db = await this.ensureDB();
-    await db.put(CACHE_STORE, { id: key, data });
+    const db = await this.tryDB(DB_OPEN_TIMEOUT_MS);
+    if (db) await db.put(CACHE_STORE, { id: key, data });
   }
 
   async clearProgress(): Promise<void> {

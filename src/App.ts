@@ -1,4 +1,4 @@
-import { DataManager } from "./utils/DataManager";
+import { DataManager, DB_BLOCKED_EVENT, DB_OUTDATED_EVENT } from "./utils/DataManager";
 import { UIManager } from "./utils/UIManager";
 import { SettingsManager } from "./utils/SettingsManager";
 import { AtlasMode } from "./modules/AtlasMode";
@@ -39,13 +39,36 @@ export class App {
   }
 
   async init(): Promise<void> {
+    // Nur im Dev-Server: Zugriff für Tests/Debugging über die Konsole (window.__app).
+    if (import.meta.env.DEV) Object.assign(window, { __app: this });
     this.uiManager.init();
     this.bindGlobalEvents();
+    this.showStartupLoading();
     await this.loadStructures();
+    document.getElementById("canvas-container")!.innerHTML = "";
     this.switchMode("atlas");
   }
 
+  /** Sichtbare Rückmeldung, solange Datenbank und Strukturdaten geladen werden. */
+  private showStartupLoading(): void {
+    document.getElementById("canvas-container")!.innerHTML = `
+      <div class="loading-overlay" role="status" aria-live="polite">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Lade Anatomiedaten …</div>
+      </div>`;
+  }
+
   private bindGlobalEvents(): void {
+    window.addEventListener(DB_BLOCKED_EVENT, () => {
+      this.uiManager.showToast(
+        "Die Anatomie Lernseite ist noch in einem anderen Tab geöffnet. Bitte diesen Tab schließen oder neu laden, damit Fortschritt gespeichert werden kann.",
+        "warning"
+      );
+    });
+    window.addEventListener(DB_OUTDATED_EVENT, () => {
+      this.uiManager.showToast("Eine neuere Version wurde in einem anderen Tab geöffnet. Bitte diese Seite neu laden.", "warning");
+    });
+
     window.addEventListener("mode-change", ((e: CustomEvent) => {
       this.switchMode(e.detail);
     }) as EventListener);

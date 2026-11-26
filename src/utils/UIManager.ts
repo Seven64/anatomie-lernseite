@@ -1,4 +1,4 @@
-import { DataManager } from "./DataManager";
+import { DataManager, isLearnableStructure } from "./DataManager";
 import { SettingsManager } from "./SettingsManager";
 import { escapeHtml } from "./text";
 import { BodySystem, Structure } from "../types";
@@ -128,6 +128,7 @@ export class UIManager {
 
     const results: Structure[] = [];
     for (const structure of this.dataManager.getAllStructures()) {
+      if (!isLearnableStructure(structure)) continue; // Beschriftungs-/Gruppenknoten ohne Geometrie
       if (this.settingsManager.getLabel(structure).toLowerCase().includes(lower)) results.push(structure);
       if (results.length >= SEARCH_RESULT_LIMIT) break;
     }

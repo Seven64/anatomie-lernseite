@@ -2,7 +2,7 @@ import { DataManager, isLearnableStructure } from "../utils/DataManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure } from "../types";
 import { PreviewViewer } from "../utils/PreviewViewer";
-import { escapeHtml, fuzzyMatch, shuffle } from "../utils/text";
+import { escapeHtml, fuzzyMatch, shuffle, structureBaseName } from "../utils/text";
 
 export class LabelQuizMode {
   private dataManager: DataManager;
@@ -121,7 +121,8 @@ export class LabelQuizMode {
     const input = document.getElementById("answer-input") as HTMLInputElement;
     if (!structure || this.answered || !input.value.trim()) return;
 
-    const isCorrect = fuzzyMatch(input.value, [structure.nameLatin, structure.nameEn ?? "", structure.nameDe ?? ""]);
+    const names = [structure.nameLatin, structure.nameEn, structure.nameDe].filter((name): name is string => Boolean(name));
+    const isCorrect = fuzzyMatch(input.value, names.map(structureBaseName));
     this.answered = true;
     this.score += isCorrect ? 1 : 0;
     this.showFeedback(isCorrect, this.settingsManager.getLabel(structure));

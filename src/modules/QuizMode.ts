@@ -107,8 +107,12 @@ export class QuizMode {
 
   private setQuizMode(mode: QuizModeType): void {
     this.currentMode = mode;
-    document.getElementById("mode-locate")!.classList.toggle("active", mode === "locate");
-    document.getElementById("mode-identify")!.classList.toggle("active", mode === "identify");
+    (["locate", "identify"] as const).forEach(type => {
+      const button = document.getElementById(`mode-${type}`)!;
+      button.classList.toggle("btn-primary", type === mode);
+      button.classList.toggle("btn-secondary", type !== mode);
+      button.setAttribute("aria-pressed", String(type === mode));
+    });
     document.getElementById("free-text-input")!.style.display = mode === "identify" ? "none" : "block";
     document.getElementById("submit-answer")!.style.display = mode === "identify" ? "none" : "inline-flex";
     document.getElementById("quiz-options")!.style.display = mode === "identify" ? "grid" : "none";
@@ -259,6 +263,7 @@ export class QuizMode {
       timestamp: new Date().toISOString(),
       responseTime: 0,
     };
+    this.updateProgress();
     this.progressData!.quizResults.push(result);
     void this.dataManager.saveProgress(this.progressData!).catch(error =>
       console.error("Failed to save quiz result:", error)

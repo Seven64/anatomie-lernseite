@@ -74,3 +74,30 @@ export function shuffle<T>(array: T[], random: () => number = Math.random): T[] 
 export function formatGroupLabel(value: string): string {
   return value.replace(/_/g, " ").replace(/\b[a-z]/g, character => character.toUpperCase());
 }
+
+const SUFFIX_PATTERN = /^(.*\S)\.([a-z]*?)(\d*)([lr]?)$/;
+const ATTACHMENT_KINDS: Record<string, string> = { o: "Ursprung", e: "Ansatz" };
+const SIDES: Record<string, string> = { l: "links", r: "rechts" };
+
+/**
+ * Entfernt die Z-Anatomy-Kennung am Namensende und macht sie lesbar:
+ * „Deltoid muscle.l“ → „Deltoid muscle (links)“,
+ * „Procerus muscle.o1r“ → „Procerus muscle – Ursprung 1 (rechts)“,
+ * „Acromial facet.i“ / „Deltoid muscle.j“ → ohne Kennung.
+ */
+export function formatStructureName(name: string): string {
+  const match = SUFFIX_PATTERN.exec(name);
+  if (!match) return name;
+  const [, base, kind, number, side] = match;
+  const attachment = ATTACHMENT_KINDS[kind];
+  let label = base;
+  if (attachment) label += ` – ${attachment}${number ? ` ${number}` : ""}`;
+  if (side) label += ` (${SIDES[side]})`;
+  return label;
+}
+
+/** Name ohne jede Z-Anatomy-Kennung (für den Antwortvergleich im Quiz). */
+export function structureBaseName(name: string): string {
+  const match = SUFFIX_PATTERN.exec(name);
+  return match ? match[1] : name;
+}
