@@ -18,18 +18,22 @@
     "data:export": "node scripts/export-data.js",
     "icon": "sh scripts/make-icon.sh",
     "test:blender": "blender --background --python scripts/blender/export_gltf.py",
-    "data:sync": "node scripts/sync-structures.js"
+    "data:sync": "node scripts/sync-structures.js",
+    "test:e2e": "playwright test --project=web --project=web-mobile",
+    "test:desktop": "E2E_NO_SERVER=1 playwright test --project=desktop"
   },
   "dependencies": {
-    "idb": "^8.0.0",
-    "three": "^0.165.0",
-    "three-mesh-bvh": "^0.8.3"
+    "electron-updater": "^6.8.11"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/node": "^20.19.43",
     "@types/three": "^0.165.0",
     "electron": "^45.5.0",
     "electron-builder": "^26.18.0",
+    "idb": "^8.0.0",
+    "three": "^0.165.0",
+    "three-mesh-bvh": "^0.8.3",
     "typescript": "^5.5.0",
     "vite": "^5.3.0",
     "vitest": "^2.1.9"
@@ -43,6 +47,7 @@
     },
     "files": [
       "dist/**/*",
+      "!dist/**/*.map",
       "desktop/**/*",
       "package.json"
     ],
@@ -72,6 +77,14 @@
       "installerLanguages": [
         "de_DE"
       ]
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Seven64",
+        "repo": "anatomie-lernseite",
+        "releaseType": "release"
+      }
+    ]
   }
 }

@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { CameraControls } from "../../utils/CameraControls";
 import { SettingsManager } from "../../utils/SettingsManager";
-import { addStudioLights, readCssColor } from "../../utils/three";
+import { addStudioLights, readCssColor, updateClipping } from "../../utils/three";
 
 type FrameHandler = (now: number) => void;
 
@@ -10,7 +10,7 @@ export class AtlasScene {
   readonly renderer: THREE.WebGLRenderer;
   readonly scene = new THREE.Scene();
   readonly camera: THREE.PerspectiveCamera;
-  readonly controls: OrbitControls;
+  readonly controls: CameraControls;
   private readonly frameHandlers: FrameHandler[] = [];
   private readonly resizeObserver: ResizeObserver;
   private readonly unsubscribeSettings: () => void;
@@ -28,15 +28,8 @@ export class AtlasScene {
     this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
     this.camera.position.set(0, 0, 2);
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.08;
-    this.controls.rotateSpeed = 0.7;
-    this.controls.zoomSpeed = 0.8;
-    this.controls.panSpeed = 0.8;
-    this.controls.minDistance = 0.05;
-    this.controls.maxDistance = 20;
-    this.controls.screenSpacePanning = true;
+    this.renderer.domElement.setAttribute("aria-label", "3D-Ansicht: ziehen zum Drehen, Rad oder Pinch zum Zoomen, Pfeiltasten drehen");
+    this.controls = new CameraControls(this.camera, this.renderer.domElement);
     this.controls.autoRotate = settingsManager.get("autoRotate");
     this.cameraDistance = settingsManager.get("cameraDistance");
 
@@ -51,7 +44,6 @@ export class AtlasScene {
         this.camera.position.copy(this.controls.target).add(offset);
         this.cameraDistance = settings.cameraDistance;
       }
-      this.controls.update();
     });
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
@@ -75,7 +67,8 @@ export class AtlasScene {
   start(): void {
     const loop = (now: number) => {
       this.animationId = requestAnimationFrame(loop);
-      this.controls.update();
+      this.controls.update(now);
+      updateClipping(this.camera, this.controls.distance);
       this.frameHandlers.forEach(handler => handler(now));
       this.renderer.render(this.scene, this.camera);
     };

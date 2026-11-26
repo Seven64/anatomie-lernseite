@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 
 export const DRACO_DECODER_PATH = "./vendor/draco/";
@@ -98,9 +97,15 @@ export function disposeObject(root: THREE.Object3D): void {
   });
 }
 
+/** Minimale Schnittstelle einer Kamerasteuerung mit Zielpunkt (siehe CameraControls). */
+export interface ControlsLike {
+  readonly target: THREE.Vector3;
+  stop?(): void;
+}
+
 export function frameCameraToObject(
   camera: THREE.PerspectiveCamera,
-  controls: OrbitControls,
+  controls: ControlsLike,
   object: THREE.Object3D,
   padding: number = 1.2
 ): void {
@@ -119,32 +124,56 @@ export function computeVisibleBounds(object: THREE.Object3D, target = new THREE.
 
 export function frameCameraToVisibleMeshes(
   camera: THREE.PerspectiveCamera,
-  controls: OrbitControls,
+  controls: ControlsLike,
   object: THREE.Object3D,
   padding: number = 1.2
 ): void {
   frameCameraToBounds(camera, controls, computeVisibleBounds(object), padding);
 }
 
+/**
+ * Richtet die Kamera so aus, dass `bounds` vollständig sichtbar ist. Standard ist die
+ * Vorderansicht; mit `keepDirection` bleibt die aktuelle Blickrichtung erhalten.
+ */
 export function frameCameraToBounds(
   camera: THREE.PerspectiveCamera,
-  controls: OrbitControls,
+  controls: ControlsLike,
   bounds: THREE.Box3,
-  padding: number
+  padding: number,
+  keepDirection = false
 ): void {
   if (bounds.isEmpty()) return;
+  controls.stop?.();
 
-  const size = bounds.getSize(new THREE.Vector3());
   const center = bounds.getCenter(new THREE.Vector3());
-  const maxDimension = Math.max(size.x, size.y, size.z);
-  const fitHeightDistance = maxDimension / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
-  const fitWidthDistance = fitHeightDistance / camera.aspect;
-  const distance = padding * Math.max(fitHeightDistance, fitWidthDistance);
+  const distance = fitDistance(camera, bounds, padding);
 
+  const direction = keepDirection
+    ? camera.position.clone().sub(controls.target).normalize()
+    : new THREE.Vector3(0, 0, 1);
+  if (!keepDirection) camera.up.set(0, 1, 0);
   controls.target.copy(center);
-  camera.position.set(center.x, center.y, center.z + distance);
-  camera.near = Math.max(distance / 100, 0.01);
-  camera.far = distance * 100;
-  camera.updateProjectionMatrix();
-  controls.update();
+  camera.position.copy(center).addScaledVector(direction, distance);
+  camera.lookAt(center);
+  updateClipping(camera, distance);
+}
+
+/** Kameraabstand, bei dem `bounds` (mit Rand `padding`) vollständig ins Bild passt. */
+export function fitDistance(camera: THREE.PerspectiveCamera, bounds: THREE.Box3, padding: number): number {
+  const size = bounds.getSize(new THREE.Vector3());
+  const maxDimension = Math.max(size.x, size.y, size.z, 1e-3);
+  const fitHeightDistance = maxDimension / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+  const fitWidthDistance = fitHeightDistance / Math.max(camera.aspect, 0.1);
+  return padding * Math.max(fitHeightDistance, fitWidthDistance);
+}
+
+/** Near/Far an den Betrachtungsabstand anpassen (scharfe Tiefenauflösung beim Zoomen). */
+export function updateClipping(camera: THREE.PerspectiveCamera, distance: number): void {
+  const near = Math.max(distance / 200, 0.001);
+  const far = Math.max(distance * 60, 10);
+  if (Math.abs(camera.near - near) / near > 0.1 || camera.far !== far) {
+    camera.near = near;
+    camera.far = far;
+    camera.updateProjectionMatrix();
+  }
 }
