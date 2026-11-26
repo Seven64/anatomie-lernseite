@@ -23,12 +23,10 @@ FROM nginx:alpine AS production
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx-security-headers.conf /etc/nginx/snippets/security-headers.conf
 
 # Copy built assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Create health check endpoint
-RUN echo '<html><body>OK</body></html>' > /usr/share/nginx/html/health
 
 # Expose port
 EXPOSE 80

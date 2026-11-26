@@ -52,6 +52,8 @@ public/
 desktop/main.cjs           Electron-Hauptprozess mit lokalem Static-Server (127.0.0.1)
 installer/license_de.html  Lizenzseite im NSIS-Installer
 build/icon.ico             App-/Installer-Icon
+nginx.conf                 nginx-Server für das Docker-Image
+nginx-security-headers.conf  Security-Header/CSP (in nginx.conf eingebunden)
 scripts/
   export-data.js           Daten-Check (Node)
   blender/                 Blender-Python: export_gltf.py + Debug-Helfer
@@ -92,5 +94,9 @@ _source/                   Z-Anatomy-Quelldaten (Startup.blend) – gitignored
   Kein Volume über `/usr/share/nginx/html` mounten, sonst wird die gebaute App überdeckt.
 - `nginx.conf` darf keine `proxy_pass`-Ziele auf nicht existierende Hosts enthalten –
   nginx startet sonst nicht.
-- `add_header` in einem `location`-Block hebt die Security-Header der `server`-Ebene
-  für diesen Block auf (nginx-Vererbung).
+- Security-Header stehen in `nginx-security-headers.conf` und werden per `include` in
+  `server` **und** jedem `location`-Block mit eigenem `add_header` eingebunden
+  (ein `add_header` im `location` hebt sonst alle geerbten Header auf).
+- Die CSP erlaubt nur `'self'` plus `'wasm-unsafe-eval'` (Draco-Decoder im Blob-Worker).
+  Neue externe Ressourcen (CDN, Fonts) brauchen eine CSP-Anpassung.
+- `.dockerignore` hält `node_modules/`, `release/` und `_source/` aus dem Build-Kontext.

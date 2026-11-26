@@ -1,6 +1,9 @@
 import bpy
 
-bpy.ops.wm.open_mainfile(filepath=r'_source\Z-Anatomy\Startup.blend')
+import os
+
+# Aus dem Projekt-Root starten: blender --background --python scripts/blender/check_collections.py
+bpy.ops.wm.open_mainfile(filepath=os.path.join('_source', 'Z-Anatomy', 'Startup.blend'))
 
 print('Exact collection names:')
 for coll in bpy.data.collections:

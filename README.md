@@ -195,6 +195,8 @@ anatomie-lernseite/
 ├── Dockerfile.dev
 ├── docker-compose.yml
 ├── nginx.conf
+├── nginx-security-headers.conf # Security-Header & CSP für nginx
+├── .dockerignore
 ├── start.sh
 └── README.md
 ```

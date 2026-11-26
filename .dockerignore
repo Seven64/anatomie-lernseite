@@ -1,0 +1,15 @@
+# Nicht in den Docker-Build-Kontext aufnehmen
+node_modules/
+dist/
+release/
+_source/
+.git/
+.github/
+scripts/__pycache__/
+*.log
+.env
+.env.*
+*.pfx
+*.p12
+*.key
+*.pem
