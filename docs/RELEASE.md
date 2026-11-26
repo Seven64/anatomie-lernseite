@@ -30,8 +30,14 @@ findet das bestehende Release und beendet den Lauf).
 | `windows` | Windows | `Anatomie-Lernseite-Setup-<version>.exe` (+ `.blockmap`) per electron-builder |
 | `release` | Ubuntu | `SHA256SUMS.txt`, Tag + GitHub-Release mit `RELEASE_NOTES.md` als Text |
 
-Über „Run workflow“ (`workflow_dispatch`) lässt sich der Lauf manuell starten, z. B. wenn
-ein Build fehlgeschlagen ist. Ein bereits vorhandenes Release wird nicht überschrieben;
+Über „Run workflow“ (`workflow_dispatch`) lässt sich der Lauf manuell starten. Standardmäßig
+ist dabei **`dry_run` aktiv**: Alles wird gebaut und geprüft (Installer und ZIP liegen als
+Artefakte bereit), aber nichts veröffentlicht – ideal, um einen Branch vor dem Merge zu testen:
+
+```bash
+gh workflow run release.yml --ref <branch>                 # Probelauf
+gh workflow run release.yml --ref main -f dry_run=false    # echtes Release nachholen
+``` Ein bereits vorhandenes Release wird nicht überschrieben;
 zum Neubau das Release (und ggf. Tag) vorher auf GitHub löschen.
 
 ## Code-Signing
