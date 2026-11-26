@@ -1,4 +1,9 @@
-import { DataManager, createEmptyProgress } from "../utils/DataManager";
+import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
+import { SYSTEM_ORDER, sortByOrder, systemLabel } from "../ui/constants";
+import { escapeHtml } from "../utils/text";
+
+const percent = (value: number, digits = 0) =>
+  `${value.toLocaleString("de-DE", { minimumFractionDigits: digits, maximumFractionDigits: digits })} %`;
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { Structure, BodySystem, ProgressData } from "../types";
@@ -78,17 +83,17 @@ export class ProgressMode {
 
   private async updateStats(): Promise<void> {
     this.renderOverviewCards();
-    await this.renderSystemProgress();
+    this.renderSystemProgress();
     this.renderWeakStructures();
     this.renderStreakStats();
   }
 
   private renderOverviewCards(): void {
     const container = document.getElementById("overview-cards")!;
-    const totalStructures = this.dataManager.getAllStructures().length;
+    const totalStructures = this.dataManager.getAllStructures().filter(isLearnableStructure).length;
     const totalQuizzes = this.progressData!.quizResults.length;
     const correctQuizzes = this.progressData!.quizResults.filter(r => r.correct).length;
-    const accuracy = totalQuizzes > 0 ? ((correctQuizzes / totalQuizzes) * 100).toFixed(1) : "0";
+    const accuracy = percent(totalQuizzes > 0 ? (correctQuizzes / totalQuizzes) * 100 : 0, 1);
     const reviewedCards = this.progressData!.flashcardProgress.length;
     const masteredCards = this.progressData!.flashcardProgress.filter(p => p.interval >= 30).length;
 
@@ -96,13 +101,13 @@ export class ProgressMode {
       <div class="progress-card">
         <div class="progress-card-header">
           <span class="progress-card-title">Gesamtstrukturen</span>
-          <span class="progress-card-value">${totalStructures}</span>
+          <span class="progress-card-value">${totalStructures.toLocaleString("de-DE")}</span>
         </div>
       </div>
       <div class="progress-card">
         <div class="progress-card-header">
           <span class="progress-card-title">Quiz-Genauigkeit</span>
-          <span class="progress-card-value">${accuracy}%</span>
+          <span class="progress-card-value">${accuracy}</span>
         </div>
       </div>
       <div class="progress-card">
@@ -132,42 +137,42 @@ export class ProgressMode {
     `;
   }
 
-  private async renderSystemProgress(): Promise<void> {
+  private renderSystemProgress(): void {
     const container = document.getElementById("system-progress")!;
-    const structures = this.dataManager.getAllStructuresSync();
-    const systems = structures.map(s => s.system);
-    const uniqueSystems = [...new Set(systems)] as BodySystem[];
+    const systems = sortByOrder(
+      [...new Set(this.dataManager.getAllStructures().map(structure => structure.system))] as BodySystem[],
+      SYSTEM_ORDER
+    );
+    const quizzes = this.progressData!.quizResults;
+    const cards = this.progressData!.flashcardProgress;
 
-    container.innerHTML = (await Promise.all(uniqueSystems.map(async system => {
-      const systemStructures = await this.dataManager.getStructuresBySystem(system);
-      const systemIds = new Set(systemStructures.map(s => s.id));
-      const systemQuizzes = this.progressData!.quizResults.filter(r => systemIds.has(r.structureId));
-      const correct = systemQuizzes.filter(r => r.correct).length;
+    container.innerHTML = systems.map(system => {
+      const systemStructures = this.dataManager.getStructuresBySystemSync(system).filter(isLearnableStructure);
+      if (systemStructures.length === 0) return "";
+      const systemIds = new Set(systemStructures.map(structure => structure.id));
+      const systemQuizzes = quizzes.filter(result => systemIds.has(result.structureId));
+      const correct = systemQuizzes.filter(result => result.correct).length;
       const total = systemQuizzes.length;
       const accuracy = total > 0 ? (correct / total) * 100 : 0;
-
-      const reviewedCards = this.progressData!.flashcardProgress.filter(p => systemIds.has(p.structureId)).length;
-      const totalCards = systemStructures.length;
-      const cardProgress = totalCards > 0 ? (reviewedCards / totalCards) * 100 : 0;
-
-      const color = getComputedStyle(document.documentElement).getPropertyValue(`--system-${system}`).trim() || "#888";
+      const reviewedCards = cards.filter(card => systemIds.has(card.structureId)).length;
+      const cardProgress = (reviewedCards / systemStructures.length) * 100;
+      const color = this.settingsManager.getSystemColor(system);
 
       return `
         <div class="progress-system-item">
           <div class="progress-system-color" style="background: ${color}"></div>
           <div class="progress-system-info">
-            <div class="progress-system-name">${system}</div>
+            <div class="progress-system-name">${escapeHtml(systemLabel(system))}</div>
             <div class="progress-system-bar">
               <div class="progress-system-fill" style="width: ${Math.max(accuracy, cardProgress)}%; background: ${color}"></div>
             </div>
           </div>
           <div class="progress-system-stats">
-            <span>Quiz: ${correct}/${total} (${total > 0 ? accuracy.toFixed(0) : 0}%)</span>
-            <span>Karten: ${reviewedCards}/${totalCards} (${cardProgress.toFixed(0)}%)</span>
+            <span>Quiz: ${correct}/${total} (${percent(accuracy)})</span>
+            <span>Karten: ${reviewedCards}/${systemStructures.length.toLocaleString("de-DE")} (${percent(cardProgress)})</span>
           </div>
-        </div>
-      `;
-    }))).join("");
+        </div>`;
+    }).join("");
   }
 
   private renderWeakStructures(): void {
@@ -195,14 +200,14 @@ export class ProgressMode {
 
     container.innerHTML = weak.map(w => {
       const structure = w.structure;
-      const accuracy = ((w.correct / w.total) * 100).toFixed(0);
+      const accuracy = percent((w.correct / w.total) * 100);
       const color = getComputedStyle(document.documentElement).getPropertyValue(`--system-${structure.system}`).trim() || "#888";
       const name = this.settingsManager.getLabel(structure);
       return `
         <div class="weak-item" data-id="${structure.id}">
           <div class="weak-item-color" style="background: ${color}"></div>
-          <span class="weak-item-name">${name}</span>
-          <span class="weak-item-accuracy">${accuracy}% (${w.correct}/${w.total})</span>
+          <span class="weak-item-name">${escapeHtml(name)}</span>
+          <span class="weak-item-accuracy">${accuracy} (${w.correct}/${w.total})</span>
         </div>
       `;
     }).join("");
@@ -245,7 +250,9 @@ export class ProgressMode {
     }).length;
 
     const totalTime = this.progressData!.quizResults.reduce((sum, r) => sum + r.responseTime, 0);
-    const avgTime = totalTime > 0 ? (totalTime / this.progressData!.quizResults.length / 1000).toFixed(1) : "0";
+    const timed = this.progressData!.quizResults.filter(result => result.responseTime > 0);
+    const avgTime = (timed.length > 0 ? totalTime / timed.length / 1000 : 0)
+      .toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
     container.innerHTML = `
       <div class="progress-card">
@@ -269,7 +276,7 @@ export class ProgressMode {
       <div class="progress-card">
         <div class="progress-card-header">
           <span class="progress-card-title">Ø Antwortzeit</span>
-          <span class="progress-card-value">${avgTime}s</span>
+          <span class="progress-card-value">${avgTime} s</span>
         </div>
       </div>
     `;

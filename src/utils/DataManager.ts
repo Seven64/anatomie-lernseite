@@ -73,6 +73,7 @@ export class DataManager {
   private structuresById = new Map<string, Structure>();
   private structuresBySystem = new Map<BodySystem, Structure[]>();
   private dbReady: Promise<void>;
+  private progressQueue: Promise<unknown> = Promise.resolve();
 
   constructor() {
     this.dbReady = this.initDB().catch(error => {
@@ -240,6 +241,24 @@ export class DataManager {
   async saveProgress(progress: ProgressData): Promise<void> {
     const db = await this.ensureDB();
     await db.put("progress", { ...progress, id: PROGRESS_KEY });
+  }
+
+  /**
+   * Ändert den Lernfortschritt atomar: lädt den aktuellen Stand, wendet `mutate` an und
+   * speichert. Aufrufe werden nacheinander ausgeführt, damit sich Modi (Quiz, Karteikarten,
+   * Notizen/Lesezeichen) nicht gegenseitig mit veralteten Kopien überschreiben.
+   */
+  updateProgress(mutate: (progress: ProgressData) => void): Promise<ProgressData> {
+    const run = async () => {
+      const progress = await this.loadProgress() ?? createEmptyProgress();
+      mutate(progress);
+      progress.lastUpdated = new Date().toISOString();
+      await this.saveProgress(progress);
+      return progress;
+    };
+    const result = this.progressQueue.then(run, run);
+    this.progressQueue = result.catch(() => undefined);
+    return result;
   }
 
   async loadProgress(): Promise<ProgressData | null> {
