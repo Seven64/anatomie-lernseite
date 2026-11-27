@@ -110,6 +110,8 @@ export class AtlasMode {
     this.layerAbort.abort();
     rt.events.abort();
     this.uiManager.hideHoverLabel();
+    // Das Info-Panel gehört zum Atlas und würde sonst andere Modi überdecken.
+    this.uiManager.closePanel();
     rt.viewCube.dispose();
     rt.cutting.dispose();
     rt.models.dispose();

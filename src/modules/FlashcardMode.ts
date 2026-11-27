@@ -4,6 +4,11 @@ import { Structure, FlashcardProgress, ProgressData } from "../types";
 import { regionLabel, systemLabel } from "../ui/constants";
 import { applySm2, createFlashcardProgress, isDue } from "../utils/sm2";
 import { escapeHtml, formatStructureName, shuffle } from "../utils/text";
+import { dailyCountFor, localDateKey } from "../utils/settingsData";
+
+const DAILY_STORAGE_KEY = "anatomy-flashcards-daily";
+/** Tasten 1–4 entsprechen den Bewertungsknöpfen (SM-2-Qualität). */
+const RATING_KEYS: Record<string, number> = { "1": 0, "2": 3, "3": 4, "4": 5 };
 
 export class FlashcardMode {
   private dataManager: DataManager;
@@ -16,7 +21,7 @@ export class FlashcardMode {
   private progressById = new Map<string, FlashcardProgress>();
   private dailyGoal: number = 20;
   private reviewedToday: number = 0;
-  private lastReviewDate: string = "";
+  private events: AbortController | null = null;
 
   constructor(dataManager: DataManager, settingsManager: SettingsManager) {
     this.dataManager = dataManager;
@@ -42,11 +47,20 @@ export class FlashcardMode {
     this.showCard();
   }
 
+  /** Tageszähler aus dem localStorage – bleibt über Neuladen und Moduswechsel erhalten. */
   private loadDailyProgress(): void {
-    const today = new Date().toISOString().split("T")[0];
-    if (this.lastReviewDate !== today) {
+    try {
+      this.reviewedToday = dailyCountFor(JSON.parse(localStorage.getItem(DAILY_STORAGE_KEY) ?? "null"), localDateKey());
+    } catch {
       this.reviewedToday = 0;
-      this.lastReviewDate = today;
+    }
+  }
+
+  private saveDailyProgress(): void {
+    try {
+      localStorage.setItem(DAILY_STORAGE_KEY, JSON.stringify({ date: localDateKey(), count: this.reviewedToday }));
+    } catch {
+      // Speicher voll oder nicht verfügbar – Zähler gilt dann nur für diese Sitzung
     }
   }
 
@@ -98,18 +112,28 @@ export class FlashcardMode {
           </div>
           <div class="flashcard-face flashcard-back">
             <div class="flashcard-answer" id="card-back"></div>
-            <div class="flashcard-hint">Bewerten Sie Ihre Kenntnis</div>
+            <div class="flashcard-hint">Bewerten Sie Ihre Kenntnis (Tasten 1–4)</div>
           </div>
         </div>
 
         <div class="flashcard-controls" style="display: none; justify-content: center; gap: 12px; margin-top: 20px;" id="rating-controls">
-          <button class="btn btn-danger" data-rating="0">Wiederholen</button>
-          <button class="btn btn-warning" data-rating="3">Schwer</button>
-          <button class="btn btn-secondary" data-rating="4">Gut</button>
-          <button class="btn btn-success" data-rating="5">Leicht</button>
+          <button class="btn btn-danger" data-rating="0" title="Taste 1">Wiederholen</button>
+          <button class="btn btn-warning" data-rating="3" title="Taste 2">Schwer</button>
+          <button class="btn btn-secondary" data-rating="4" title="Taste 3">Gut</button>
+          <button class="btn btn-success" data-rating="5" title="Taste 4">Leicht</button>
         </div>
 
         <div class="flashcard-stats" id="card-stats" style="display: none;"></div>
+
+        <div class="flashcard-complete" id="flashcard-complete" hidden>
+          <div class="flashcard-complete-icon" aria-hidden="true">🎉</div>
+          <h2 id="flashcard-complete-title"></h2>
+          <p id="flashcard-complete-text"></p>
+          <div class="flashcard-complete-actions">
+            <button class="btn btn-primary" id="continue-btn">Weiter üben</button>
+            <button class="btn btn-secondary" id="reset-btn">Neu mischen</button>
+          </div>
+        </div>
 
         <div style="margin-top: 24px; text-align: center; color: var(--fg-muted); font-size: 12px;">
           <span id="card-counter">0 / 0</span>
@@ -119,24 +143,43 @@ export class FlashcardMode {
   }
 
   private bindEvents(): void {
+    this.events?.abort();
+    this.events = new AbortController();
+    const { signal } = this.events;
     const card = document.getElementById("flashcard")!;
-    card.addEventListener("click", () => this.flipCard());
-    card.addEventListener("keydown", (e: KeyboardEvent) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); this.flipCard(); } });
+    card.addEventListener("click", () => this.flipCard(), { signal });
 
-    document.querySelectorAll("[data-rating]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const rating = parseInt((e.currentTarget as HTMLButtonElement).dataset.rating!);
-        this.rateCard(rating);
-      });
+    document.querySelectorAll<HTMLButtonElement>("#rating-controls [data-rating]").forEach(btn => {
+      btn.addEventListener("click", () => this.rateCard(Number(btn.dataset.rating)), { signal });
     });
+    document.getElementById("continue-btn")!.addEventListener("click", () => this.resume(false), { signal });
+    document.getElementById("reset-btn")!.addEventListener("click", () => this.resume(true), { signal });
+    // Tastatur: Leertaste/Enter dreht um, 1–4 bewertet – solange kein Eingabefeld/Knopf den Fokus hat.
+    document.addEventListener("keydown", event => this.handleKey(event), { signal });
+  }
+
+  private handleKey(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey || event.altKey || document.querySelector(".modal-overlay")) return;
+    const target = event.target as HTMLElement;
+    if (target !== document.body && target.id !== "flashcard") return;
+    if (!document.getElementById("flashcard-complete")?.hidden) return;
+    if ((event.key === " " || event.key === "Enter") && !this.isFlipped) {
+      event.preventDefault();
+      this.flipCard();
+    } else if (event.key in RATING_KEYS && this.isFlipped) {
+      event.preventDefault();
+      this.rateCard(RATING_KEYS[event.key]);
+    }
   }
 
   private showCard(): void {
     if (this.currentIndex >= this.flashcards.length) {
-      this.showCompletion();
+      this.showCompletion("deck");
       return;
     }
 
+    document.getElementById("flashcard-complete")!.hidden = true;
+    document.getElementById("flashcard")!.hidden = false;
     const structure = this.flashcards[this.currentIndex];
     const frontName = this.settingsManager.getLabel(structure);
 
@@ -197,39 +240,37 @@ export class FlashcardMode {
     }).catch(error => console.error("Failed to save flashcard progress:", error));
 
     this.reviewedToday++;
-
-    this.currentIndex++;
-    this.showCard();
+    this.saveDailyProgress();
     this.updateDailyCount();
+    this.currentIndex++;
+
+    // Den Fokus auf der Karte halten, damit die Tastatursteuerung weiterläuft
+    // (der geklickte Bewertungsknopf wird gleich ausgeblendet).
+    document.getElementById("flashcard")!.focus({ preventScroll: true });
+    if (this.reviewedToday === this.dailyGoal) this.showCompletion("goal");
+    else this.showCard();
   }
 
-  private showCompletion(): void {
-    const container = document.getElementById("flashcard")!;
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px;">
-        <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-        <h2 style="margin-bottom: 12px;">Tagesziel erreicht!</h2>
-        <p style="color: var(--fg-secondary); margin-bottom: 24px;">Du hast ${this.reviewedToday} Karteikarten wiederholt.</p>
-        <button class="btn btn-primary" id="continue-btn">Weiter üben</button>
-        <button class="btn btn-secondary" style="margin-left: 12px;" id="reset-btn">Neu mischen</button>
-      </div>
-    `;
+  private showCompletion(reason: "goal" | "deck"): void {
+    document.getElementById("flashcard-complete-title")!.textContent = reason === "goal" ? "Tagesziel erreicht!" : "Alle Karten wiederholt!";
+    document.getElementById("flashcard-complete-text")!.textContent = `Du hast heute ${this.reviewedToday} Karteikarten wiederholt.`;
+    document.getElementById("flashcard")!.hidden = true;
     document.getElementById("rating-controls")!.style.display = "none";
+    document.getElementById("card-stats")!.style.display = "none";
     document.getElementById("card-counter")!.textContent = "";
+    const complete = document.getElementById("flashcard-complete")!;
+    complete.hidden = false;
+    document.getElementById("continue-btn")!.focus({ preventScroll: true });
+  }
 
-    document.getElementById("continue-btn")!.addEventListener("click", () => {
-      this.flashcards = this.dataManager.getAllStructures().filter(isLearnableStructure);
+  /** „Weiter üben“ setzt den Stapel fort, „Neu mischen“ beginnt ihn gemischt von vorn. */
+  private resume(reshuffle: boolean): void {
+    if (reshuffle || this.currentIndex >= this.flashcards.length) {
       shuffle(this.flashcards);
       this.currentIndex = 0;
-      this.reviewDueCards();
-      this.bindUI();
-      this.showCard();
-    });
-
-    document.getElementById("reset-btn")!.addEventListener("click", () => {
-      this.currentIndex = 0;
-      this.showCard();
-    });
+    }
+    this.showCard();
+    document.getElementById("flashcard")!.focus({ preventScroll: true });
   }
 
   private updateDailyCount(): void {
@@ -237,6 +278,8 @@ export class FlashcardMode {
   }
 
   private cleanup(): void {
+    this.events?.abort();
+    this.events = null;
     const container = document.getElementById("canvas-container")!;
     container.innerHTML = "";
   }

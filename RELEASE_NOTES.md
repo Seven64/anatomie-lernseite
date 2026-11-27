@@ -37,8 +37,21 @@ Quiz-Layout, das auch in kleinen Fenstern funktioniert.
 - Im Einstellungsdialog überdeckt die Fußzeile den Inhalt nicht mehr.
 - In schmalen Fenstern und auf dem Handy werden die Symbole der Kopfzeile nicht mehr
   gestaucht; die Modus-Leiste lässt sich bei Bedarf seitlich scrollen.
-- Neue Tests für Kameraberechnung und Desktop-App (Start, Darstellung, Speichern
-  über Neustarts).
+- Karteikarten: Beim Erreichen des Tagesziels erscheint eine Abschlussansicht,
+  der Tageszähler bleibt nach dem Neuladen erhalten, „Neu mischen“ funktioniert
+  wieder, und nach dem Bewerten lässt sich mit Leertaste und den Tasten 1–4 weiterlernen.
+- Notizen: Wird im Editor eine andere Struktur gewählt, wird die Notiz dorthin
+  verschoben (bisher wurde die Auswahl ignoriert). Der Editor wird nicht mehr vom
+  Info-Panel des Atlas verdeckt.
+- Quiz: Nach einem Moduswechsel zeigen Filter und „Wo ist …?“/„Wie heißt …?“
+  wieder den tatsächlich aktiven Zustand.
+- Datensicherung in den Einstellungen enthält jetzt die Einstellungen (Theme,
+  Sprache, Tagesziel …); „Alle Daten löschen“ setzt sie zurück.
+- Fortschrittsimport älterer oder unvollständiger Dateien bricht die Notizen-Ansicht
+  nicht mehr; vorhandene Notizen und Lesezeichen bleiben erhalten.
+- Nach dem Ausblenden der gewählten Struktur bleibt „Ansicht zurücksetzen“ verfügbar.
+- Neue Tests für Kameraberechnung, Desktop-App (Start, Darstellung, Speichern
+  über Neustarts) und End-to-End-Tests aller Lernmodi der Web-App.
 
 ## Windows-Download
 

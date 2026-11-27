@@ -1,5 +1,6 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 import { Structure, ProgressData, BodySystem, UserSettings } from "../types";
+import { createEmptyProgress, normalizeProgress } from "./progressData";
 
 interface AnatomyDB extends DBSchema {
   structures: {
@@ -59,18 +60,7 @@ export function isTitleNode(name: string): boolean {
   return /\.g$/.test(name);
 }
 
-/** Leerer Lernfortschritt – gemeinsame Vorlage für alle Modi. */
-export function createEmptyProgress(): ProgressData {
-  return {
-    version: "1.0",
-    userId: "local",
-    quizResults: [],
-    flashcardProgress: [],
-    notes: {},
-    bookmarks: [],
-    lastUpdated: new Date().toISOString(),
-  };
-}
+export { createEmptyProgress };
 
 export class DataManager {
   private db: IDBPDatabase<AnatomyDB> | null = null;
@@ -272,7 +262,7 @@ export class DataManager {
     const data = await db.get("progress", PROGRESS_KEY);
     if (!data) return null;
     const { id: _id, ...progress } = data;
-    return progress;
+    return normalizeProgress(progress);
   }
 
   /** Lädt einen Eintrag aus dem generischen Cache-Store (z. B. Muskelschichten). */
@@ -316,9 +306,10 @@ export class DataManager {
     return { structures, progress, settings };
   }
 
-  async importData(data: { structures?: Structure[]; progress?: ProgressData; settings?: UserSettings }): Promise<void> {
+  async importData(data: { structures?: Structure[]; progress?: unknown; settings?: UserSettings }): Promise<void> {
     if (data.structures) await this.saveStructures(data.structures);
-    if (data.progress) await this.saveProgress(data.progress);
+    const progress = normalizeProgress(data.progress);
+    if (progress) await this.saveProgress(progress);
     if (data.settings) await this.saveSettings(data.settings);
   }
 

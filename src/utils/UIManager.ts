@@ -200,6 +200,10 @@ export class UIManager {
     return this.currentStructure;
   }
 
+  closePanel(): void {
+    this.infoPanel.close();
+  }
+
   togglePanel(): void {
     this.infoPanel.toggle();
   }

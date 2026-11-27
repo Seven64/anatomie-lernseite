@@ -256,15 +256,22 @@ export class NotesMode {
   }
 
   private saveNote(): void {
-    const structureId = (document.getElementById("save-note")! as HTMLButtonElement).dataset.id!;
+    const originalId = (document.getElementById("save-note")! as HTMLButtonElement).dataset.id!;
+    // Im Editor kann die Notiz einer anderen Struktur zugeordnet werden – sie wird dann verschoben.
+    const structureId = (document.getElementById("note-structure") as HTMLSelectElement).value || originalId;
     const content = (document.getElementById("note-content") as HTMLTextAreaElement).value.trim();
 
     if (!content) {
       this.uiManager.showError("Notiz darf nicht leer sein");
       return;
     }
+    if (structureId !== originalId && this.progressData!.notes[structureId] &&
+      !confirm("Zu dieser Struktur gibt es bereits eine Notiz. Überschreiben?")) {
+      return;
+    }
 
     void this.mutate(progress => {
+      if (structureId !== originalId) delete progress.notes[originalId];
       progress.notes[structureId] = { content, lastModified: new Date().toISOString() };
     }).then(() => {
       this.hideEditor();

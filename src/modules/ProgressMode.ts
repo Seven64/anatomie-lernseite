@@ -1,6 +1,7 @@
 import { DataManager, createEmptyProgress, isLearnableStructure } from "../utils/DataManager";
 import { SYSTEM_ORDER, sortByOrder, systemLabel } from "../ui/constants";
 import { escapeHtml } from "../utils/text";
+import { mergeImportedProgress, normalizeProgress } from "../utils/progressData";
 
 const percent = (value: number, digits = 0) =>
   `${value.toLocaleString("de-DE", { minimumFractionDigits: digits, maximumFractionDigits: digits })} %`;
@@ -297,18 +298,21 @@ export class ProgressMode {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       try {
-        const data = JSON.parse(reader.result as string);
-        if (data.version && data.quizResults && data.flashcardProgress) {
-          this.progressData = data;
-          this.dataManager.saveProgress(this.progressData!);
-          this.updateStats();
-          this.uiManager.showToast("Fortschritt erfolgreich importiert", "success");
-        } else {
+        const raw: unknown = JSON.parse(reader.result as string);
+        const imported = normalizeProgress(raw);
+        if (!imported) {
           this.uiManager.showError("Ungültiges Dateiformat");
+          return;
         }
-      } catch {
+        // Fehlen Notizen/Lesezeichen in der Datei (ältere Exporte), bleiben die vorhandenen erhalten.
+        this.progressData = mergeImportedProgress(this.progressData, imported, raw as Record<string, unknown>);
+        await this.dataManager.saveProgress(this.progressData);
+        this.updateStats();
+        this.uiManager.showToast("Fortschritt erfolgreich importiert", "success");
+      } catch (error) {
+        console.error("Failed to import progress:", error);
         this.uiManager.showError("Fehler beim Lesen der Datei");
       }
     };

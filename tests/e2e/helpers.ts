@@ -13,7 +13,8 @@ export async function waitForAtlas(page: Page): Promise<void> {
  */
 export async function renderedCoverage(page: Page): Promise<number> {
   const canvas = page.locator("canvas.atlas-canvas");
-  const shot = await canvas.screenshot();
+  // Overlays (Info-Panel, ViewCube) liegen über dem Canvas und würden mitgezählt.
+  const shot = await canvas.screenshot({ style: "#info-panel, .viewcube, .atlas-hover-label, .toast { visibility: hidden !important; }" });
   return page.evaluate(async (base64: string) => {
     const image = new Image();
     image.src = `data:image/png;base64,${base64}`;

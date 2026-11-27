@@ -26,7 +26,14 @@ export class InfoPanel {
 
   clear(): void {
     const content = document.getElementById("info-content");
-    if (content) content.innerHTML = INFO_PANEL_EMPTY_HTML;
+    if (!content) return;
+    // Nach „Ausblenden“ der gewählten Struktur muss die Ansicht weiterhin zurücksetzbar sein.
+    content.innerHTML = `${INFO_PANEL_EMPTY_HTML}
+      <div class="structure-actions">
+        <button class="btn btn-secondary" data-action="reset-view">Ansicht zurücksetzen</button>
+      </div>`;
+    content.querySelector("[data-action='reset-view']")!
+      .addEventListener("click", () => window.dispatchEvent(new CustomEvent("reset-view")));
   }
 
   show(structure: Structure): void {

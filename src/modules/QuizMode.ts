@@ -43,6 +43,10 @@ export class QuizMode {
   private async initMode(): Promise<void> {
     this.bindFilters();
     this.bindQuizEvents();
+    // Beim Zurückkehren gewählten Modus und Filter wiederherstellen.
+    (document.getElementById("filter-system") as HTMLSelectElement).value = this.filterSystem;
+    (document.getElementById("filter-region") as HTMLSelectElement).value = this.filterRegion;
+    this.applyModeUI(this.currentMode);
     this.applyFilters();
   }
 
@@ -105,6 +109,11 @@ export class QuizMode {
   }
 
   private setQuizMode(mode: QuizModeType): void {
+    this.applyModeUI(mode);
+    this.nextQuestion();
+  }
+
+  private applyModeUI(mode: QuizModeType): void {
     this.currentMode = mode;
     (["locate", "identify"] as const).forEach(type => {
       const button = document.getElementById(`mode-${type}`)!;
@@ -115,7 +124,6 @@ export class QuizMode {
     document.getElementById("free-text-input")!.style.display = mode === "identify" ? "none" : "block";
     document.getElementById("submit-answer")!.style.display = mode === "identify" ? "none" : "inline-flex";
     document.getElementById("quiz-options")!.style.display = mode === "identify" ? "grid" : "none";
-    this.nextQuestion();
   }
 
   private applyFilters(): void {
