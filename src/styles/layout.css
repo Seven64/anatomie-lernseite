@@ -35,7 +35,18 @@
   gap: var(--spacing-3);
 }
 
+/* Bei schmalen Fenstern scrollt die Modus-Leiste, statt Logo und Symbole zu stauchen. */
+.header-center {
+  min-width: 0;
+}
+
+.app-header .btn-icon,
 .header-brand {
+  flex-shrink: 0;
+}
+
+.header-brand {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
@@ -52,6 +63,8 @@
 }
 
 .mode-tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
   display: flex;
   gap: var(--spacing-1);
   background: var(--bg-tertiary);
@@ -70,6 +83,7 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mode-tab:hover {
@@ -109,7 +123,7 @@
 .header-search input:focus {
   border-color: var(--border-focus);
   background: var(--bg-secondary);
-  box-shadow: 0 0 0 3px var(--accent-primary)33;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 20%, transparent);
 }
 
 .sidebar-toggle {
@@ -283,12 +297,15 @@
   position: fixed;
   top: var(--header-height);
   right: 0;
+  bottom: 0;
   width: var(--info-panel-width);
-  height: calc(100vh - var(--header-height));
+  max-width: 100vw;
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
   transform: translateX(100%);
-  transition: transform var(--transition-normal);
+  /* Geschlossen auch unsichtbar, damit die Knöpfe nicht per Tab erreichbar sind. */
+  visibility: hidden;
+  transition: transform var(--transition-normal), visibility 0s linear var(--transition-normal);
   z-index: 50;
   display: flex;
   flex-direction: column;
@@ -297,6 +314,13 @@
 
 .info-panel.open {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform var(--transition-normal), visibility 0s;
+}
+
+/* Offenes Info-Panel überdeckt den rechten Rand der 3D-Ansicht: ViewCube daneben setzen. */
+.app-layout:has(.info-panel.open) .viewcube {
+  right: calc(var(--info-panel-width) + var(--spacing-3));
 }
 
 .info-panel-header {

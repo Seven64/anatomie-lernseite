@@ -52,8 +52,9 @@ export interface StructureLayerFilter {
 
 export const STRUCTURE_LAYERS: Partial<Record<BodySystem, StructureLayerFilter[]>> = {
   muscular: [
-    { id: "muscles", label: "Muskeln und Begleitstrukturen", matches: /./i, excludes: /tendon|tendinous/i },
+    { id: "muscles", label: "Muskeln", matches: /./i, excludes: /tendon|tendinous|fascia|aponeuros|retinacul|septum|tract|sheath/i },
     { id: "tendons", label: "Sehnen", matches: /tendon|tendinous/i },
+    { id: "fascia", label: "Faszien und Retinakula", matches: /fascia|aponeuros|retinacul|septum|tract|sheath/i, excludes: /tendon|tendinous/i },
   ],
   cardiovascular: [
     { id: "arteries", label: "Arterien", matches: /artery|arterial|arteries|aort|pulmonary trunk/i },
@@ -65,6 +66,15 @@ export const STRUCTURE_LAYERS: Partial<Record<BodySystem, StructureLayerFilter[]
       excludes: /artery|arterial|arteries|aort|pulmonary trunk|vein|venous|sinus|plexus/i,
     },
   ],
+};
+
+/**
+ * Strukturen, die beim Einblenden eines Systems zunächst verborgen bleiben, weil sie alles
+ * andere verdecken (Faszien umhüllen die gesamte Muskulatur). Über die Ebene im Baum
+ * jederzeit einblendbar.
+ */
+export const INITIALLY_HIDDEN: Partial<Record<BodySystem, RegExp>> = {
+  muscular: /fascia|aponeuros|retinacul|intermuscular septum|iliotibial tract/i,
 };
 
 /** Systeme, deren Kopfzeile einen Schicht-Slider statt eines Deckkraft-Sliders erhält. */

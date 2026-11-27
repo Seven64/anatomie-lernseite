@@ -1,15 +1,18 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { CameraControls } from "./CameraControls";
 import { Structure } from "../types";
+import { isTitleNode } from "./DataManager";
 import {
   addStudioLights,
   collectMeshes,
   createGltfLoader,
   createHighlightMaterial,
   findNodesByName,
+  getNodeName,
   frameCameraToBounds,
   frameCameraToObject,
   readCssColor,
+  updateClipping,
 } from "./three";
 
 /** Geparste Modelle werden pro GLB-Datei einmal geladen und danach geklont. */
@@ -40,7 +43,7 @@ export class PreviewViewer {
   private readonly renderer: THREE.WebGLRenderer;
   private readonly scene = new THREE.Scene();
   private readonly camera: THREE.PerspectiveCamera;
-  private readonly controls: OrbitControls;
+  private readonly controls: CameraControls;
   private readonly highlight = createHighlightMaterial();
   /** Umgebung durchscheinend, damit auch tief liegende Zielstrukturen sichtbar sind. */
   private readonly context = new THREE.MeshStandardMaterial({
@@ -59,8 +62,7 @@ export class PreviewViewer {
     container.appendChild(this.renderer.domElement);
 
     this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
+    this.controls = new CameraControls(this.camera, this.renderer.domElement);
 
     this.scene.background = readCssColor("--bg-primary", "#f5f7fb");
     addStudioLights(this.scene);
@@ -83,6 +85,11 @@ export class PreviewViewer {
     if (this.model) this.scene.remove(this.model);
     this.model = source.clone(true);
     this.model.updateMatrixWorld(true);
+    // Titel-Schriftzüge der Z-Anatomy-Gruppen ausblenden.
+    this.model.traverse(child => {
+      const name = getNodeName(child);
+      if (name && isTitleNode(name)) child.visible = false;
+    });
     this.scene.add(this.model);
 
     const targetNodes = findNodesByName(this.model, structure.objectName);
@@ -154,6 +161,7 @@ export class PreviewViewer {
   private animate = (): void => {
     this.animationId = requestAnimationFrame(this.animate);
     this.controls.update();
+    updateClipping(this.camera, this.controls.distance);
     this.renderer.render(this.scene, this.camera);
   };
 }

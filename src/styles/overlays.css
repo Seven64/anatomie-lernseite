@@ -74,7 +74,9 @@
 .modal-body {
   padding: var(--spacing-5);
   overflow-y: auto;
-  flex: 1;
+  flex: 1 1 auto;
+  /* Ohne min-height: 0 schrumpft der Inhalt nicht und die Fußzeile überdeckt ihn. */
+  min-height: 0;
 }
 
 .modal-footer {

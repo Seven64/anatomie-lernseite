@@ -43,6 +43,10 @@ export class QuizMode {
   private async initMode(): Promise<void> {
     this.bindFilters();
     this.bindQuizEvents();
+    // Beim Zurückkehren gewählten Modus und Filter wiederherstellen.
+    (document.getElementById("filter-system") as HTMLSelectElement).value = this.filterSystem;
+    (document.getElementById("filter-region") as HTMLSelectElement).value = this.filterRegion;
+    this.applyModeUI(this.currentMode);
     this.applyFilters();
   }
 
@@ -56,17 +60,17 @@ export class QuizMode {
     const systems = [...new Set(this.dataManager.getAllStructures().map(s => s.system))].sort();
     const regions = [...new Set(this.dataManager.getAllStructures().map(s => s.region).filter(Boolean))].sort();
     return `
-      <div class="quiz-container" style="height: 100%; display: flex; flex-direction: column;">
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center;">
-          <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary" id="mode-locate" data-mode="locate">Wo ist …?</button>
-            <button class="btn btn-primary" id="mode-identify" data-mode="identify">Wie heißt …?</button>
+      <div class="quiz-container">
+        <div class="quiz-toolbar">
+          <div class="quiz-mode-switch" role="group" aria-label="Quiz-Modus">
+            <button class="btn btn-secondary" id="mode-locate" data-mode="locate" aria-pressed="false">Wo ist …?</button>
+            <button class="btn btn-primary" id="mode-identify" data-mode="identify" aria-pressed="true">Wie heißt …?</button>
           </div>
-          <select class="select" id="filter-system" style="min-width: 180px;">
+          <select class="select" id="filter-system" aria-label="System filtern">
             <option value="all">Alle Systeme</option>
             ${systems.map(s => `<option value="${s}">${escapeHtml(systemLabel(s))}</option>`).join("")}
           </select>
-          <select class="select" id="filter-region" style="min-width: 180px;">
+          <select class="select" id="filter-region" aria-label="Region filtern">
             <option value="all">Alle Regionen</option>
             ${regions.map(r => `<option value="${escapeHtml(r!)}">${escapeHtml(regionLabel(r!))}</option>`).join("")}
           </select>
@@ -75,21 +79,21 @@ export class QuizMode {
           <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress" style="width: 0%"></div></div>
           <span class="quiz-progress-text" id="quiz-score">0 / 0</span>
         </div>
-        <div class="quiz-question" id="quiz-question">Lade Frage...</div>
-        <div style="flex: 1; position: relative; min-height: 300px;">
+        <div class="quiz-question" id="quiz-question" aria-live="polite">Lade Frage...</div>
+        <div class="quiz-stage">
           <div class="canvas-container" id="quiz-canvas"></div>
           <div class="loading-overlay" id="quiz-loading" style="display: none;">
             <div class="loading-spinner"></div>
             <div class="loading-text">Lade 3D-Modell...</div>
           </div>
+          <div id="quiz-feedback" class="quiz-feedback" role="status" style="display: none;"></div>
         </div>
         <div class="quiz-options" id="quiz-options" style="display: none;"></div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-          <input type="text" class="search-input" id="free-text-input" placeholder="Strukturnamen eingeben..." style="flex: 1; min-width: 200px; max-width: 400px; display: none;" autocomplete="off">
+        <div class="quiz-answer-row">
+          <input type="text" class="search-input" id="free-text-input" placeholder="Strukturnamen eingeben..." style="display: none;" autocomplete="off">
           <button class="btn btn-primary" id="submit-answer" style="display: none;">Prüfen</button>
           <button class="btn btn-secondary" id="next-question">Nächste Frage</button>
         </div>
-        <div id="quiz-feedback" class="quiz-feedback" style="display: none;"></div>
       </div>
     `;
   }
@@ -105,6 +109,11 @@ export class QuizMode {
   }
 
   private setQuizMode(mode: QuizModeType): void {
+    this.applyModeUI(mode);
+    this.nextQuestion();
+  }
+
+  private applyModeUI(mode: QuizModeType): void {
     this.currentMode = mode;
     (["locate", "identify"] as const).forEach(type => {
       const button = document.getElementById(`mode-${type}`)!;
@@ -115,7 +124,6 @@ export class QuizMode {
     document.getElementById("free-text-input")!.style.display = mode === "identify" ? "none" : "block";
     document.getElementById("submit-answer")!.style.display = mode === "identify" ? "none" : "inline-flex";
     document.getElementById("quiz-options")!.style.display = mode === "identify" ? "grid" : "none";
-    this.nextQuestion();
   }
 
   private applyFilters(): void {

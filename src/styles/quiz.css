@@ -1,17 +1,74 @@
 /* ---------------------------------------------------------------------------
    Quiz Components
    --------------------------------------------------------------------------- */
+/* Layout: Kopfzeilen und Antwortbereich behalten ihre Höhe, die 3D-Bühne nimmt den
+   Rest ein und schrumpft bei kleinen Fenstern – Bedienelemente bleiben immer sichtbar. */
 .quiz-container {
+  box-sizing: border-box;
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  overflow-y: auto;
+}
+
+.quiz-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.quiz-toolbar .select {
+  flex: 1 1 170px;
+  min-width: 0;
+  width: auto;
+  max-width: 260px;
+}
+
+.quiz-mode-switch {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.quiz-stage {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+}
+
+.quiz-stage .canvas-container {
+  position: absolute;
+  inset: 0;
+}
+
+.quiz-answer-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+/* Niedrige Fenster (kleine Laptops, Handy quer): Bühne darf weiter schrumpfen. */
+@media (max-height: 720px) {
+  .quiz-stage {
+    min-height: 120px;
+  }
+}
+
+.quiz-answer-row .search-input {
+  flex: 1 1 220px;
+  max-width: 420px;
 }
 
 .quiz-progress {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
 }
 
 .quiz-progress-bar {
@@ -41,19 +98,17 @@
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--fg-primary);
-  margin-bottom: var(--spacing-4);
   text-align: center;
 }
 
 .quiz-options {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-2);
 }
 
 .quiz-option {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
   border: 2px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg-secondary);
@@ -72,29 +127,39 @@
 
 .quiz-option.selected {
   border-color: var(--accent-primary);
-  background: var(--accent-primary)1a;
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
 }
 
 .quiz-option.correct {
   border-color: var(--accent-success);
-  background: var(--accent-success)1a;
+  background: color-mix(in srgb, var(--accent-success) 10%, transparent);
   color: var(--accent-success);
 }
 
 .quiz-option.incorrect {
   border-color: var(--accent-danger);
-  background: var(--accent-danger)1a;
+  background: color-mix(in srgb, var(--accent-danger) 10%, transparent);
   color: var(--accent-danger);
 }
 
+/* Rückmeldung schwebt über der 3D-Bühne und verschiebt das Layout nicht. */
 .quiz-feedback {
+  position: absolute;
+  left: 50%;
+  bottom: var(--spacing-3);
+  z-index: 6;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-2) var(--spacing-3);
+  max-width: calc(100% - 2 * var(--spacing-4));
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-50%);
   animation: slideIn var(--transition-normal);
 }
 
@@ -114,8 +179,8 @@
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
 }
 
 .loading-overlay {
@@ -127,7 +192,6 @@
   justify-content: center;
   gap: var(--spacing-3);
   background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
-  z-index: 5;
   z-index: 10;
 }
 

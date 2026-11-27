@@ -51,25 +51,25 @@ export class LabelQuizMode {
 
   private getQuizHTML(): string {
     return `
-      <div class="quiz-container" style="height: 100%; display: flex; flex-direction: column;">
+      <div class="quiz-container">
         <div class="quiz-progress">
           <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress" style="width: 0%"></div></div>
           <span class="quiz-progress-text" id="quiz-score">0 / 0</span>
         </div>
-        <div class="quiz-question" id="quiz-question">Lade Frage...</div>
-        <div style="flex: 1; position: relative;">
+        <div class="quiz-question" id="quiz-question" aria-live="polite">Lade Frage...</div>
+        <div class="quiz-stage">
           <div class="canvas-container" id="label-quiz-canvas"></div>
           <div class="loading-overlay" id="quiz-loading" style="display: none;">
             <div class="loading-spinner"></div>
             <div class="loading-text">Lade 3D-Modell...</div>
           </div>
+          <div id="quiz-feedback" class="quiz-feedback" role="status" style="display: none;"></div>
         </div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-          <input type="text" class="search-input" id="answer-input" placeholder="Strukturnamen eingeben..." style="flex: 1; min-width: 200px; max-width: 400px;" autocomplete="off">
+        <div class="quiz-answer-row">
+          <input type="text" class="search-input" id="answer-input" placeholder="Strukturnamen eingeben..." autocomplete="off" aria-label="Antwort">
           <button class="btn btn-primary" id="submit-answer">Prüfen</button>
           <button class="btn btn-secondary" id="skip-question">Überspringen</button>
         </div>
-        <div id="quiz-feedback" class="quiz-feedback" style="display: none;"></div>
       </div>
     `;
   }

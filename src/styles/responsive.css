@@ -1,6 +1,21 @@
 /* ---------------------------------------------------------------------------
    Responsive
    --------------------------------------------------------------------------- */
+/* Mittlere Breiten: Platz für alle Modus-Tabs schaffen (Logo ohne Schriftzug, kürzere Suche). */
+@media (max-width: 1100px) {
+  .header-brand span {
+    display: none;
+  }
+
+  .header-search input {
+    width: 160px;
+  }
+
+  .mode-tab {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+}
+
 @media (max-width: 1024px) {
   :root {
     --sidebar-width: 280px;
@@ -65,8 +80,8 @@
     bottom: 0;
     right: 0;
     left: 0;
-    height: 60vh;
-    max-height: 60vh;
+    height: 45vh;
+    max-height: 45vh;
     border-left: none;
     border-top: 1px solid var(--border);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
@@ -75,6 +90,11 @@
 
   .info-panel.open {
     transform: translateY(0);
+  }
+
+  /* Bottom-Sheet: ViewCube bleibt oben rechts. */
+  .app-layout:has(.info-panel.open) .viewcube {
+    right: var(--spacing-3);
   }
 
   .header-search input {
@@ -91,7 +111,12 @@
   }
 
   .quiz-options {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quiz-option {
+    font-size: var(--font-size-sm);
+    overflow-wrap: anywhere;
   }
 
   .progress-dashboard {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { CameraControls } from "../../utils/CameraControls";
 import { readCssColor } from "../../utils/three";
 
 /**
@@ -21,7 +21,6 @@ const FACES: Array<{ label: string; normal: [number, number, number] }> = [
 
 const SIZE_PX = 112;
 const EDGE = 0.17; // Anteil der Kantenzone pro Seite (bei Würfelkante 1)
-const FLIGHT_MS = 450;
 
 export class ViewCube {
   private readonly root: HTMLElement;
@@ -32,12 +31,11 @@ export class ViewCube {
   private readonly hover: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>;
   private readonly raycaster = new THREE.Raycaster();
   private readonly events = new AbortController();
-  private flight: { from: THREE.Vector3; to: THREE.Vector3; distance: number; start: number } | null = null;
 
   constructor(
     container: HTMLElement,
     private readonly mainCamera: THREE.PerspectiveCamera,
-    private readonly controls: OrbitControls,
+    private readonly controls: CameraControls,
     private readonly onHome: () => void
   ) {
     this.root = document.createElement("div");
@@ -95,8 +93,7 @@ export class ViewCube {
   }
 
   /** In jedem Frame aufrufen: Würfel ausrichten, Kameraflug fortsetzen, rendern. */
-  update(now: number): void {
-    if (this.flight) this.stepFlight(now);
+  update(): void {
     const offset = this.mainCamera.position.clone().sub(this.controls.target).normalize();
     this.camera.position.copy(offset.multiplyScalar(3));
     this.camera.up.copy(this.mainCamera.up);
@@ -104,13 +101,14 @@ export class ViewCube {
     this.renderer.render(this.scene, this.camera);
   }
 
-  /** Kamera so drehen, dass sie aus Richtung `direction` (Weltkoordinaten) auf das Ziel blickt. */
+  /**
+   * Kamera so drehen, dass sie aus Richtung `direction` (Weltkoordinaten) auf das Ziel blickt.
+   * Oben/Unten: vorne zeigt zum unteren bzw. oberen Bildrand (CAD-Konvention).
+   */
   flyTo(direction: THREE.Vector3): void {
     const to = direction.clone().normalize();
-    // OrbitControls kann nicht exakt entlang der Hochachse blicken.
-    if (Math.abs(to.y) > 0.999) to.set(0, Math.sign(to.y), 1e-3).normalize();
-    const offset = this.mainCamera.position.clone().sub(this.controls.target);
-    this.flight = { from: offset.clone().normalize(), to, distance: offset.length(), start: performance.now() };
+    const up = Math.abs(to.y) > 0.999 ? new THREE.Vector3(0, 0, -Math.sign(to.y)) : new THREE.Vector3(0, 1, 0);
+    this.controls.flyTo({ direction: to, up });
   }
 
   /** Dreht die Ansicht um die Hochachse in 90°-Schritten. */
@@ -133,19 +131,6 @@ export class ViewCube {
     this.hover.material.dispose();
     this.renderer.dispose();
     this.root.remove();
-  }
-
-  private stepFlight(now: number): void {
-    const flight = this.flight!;
-    const t = Math.min(1, (now - flight.start) / FLIGHT_MS);
-    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    const rotation = new THREE.Quaternion().setFromUnitVectors(flight.from, flight.to);
-    const step = new THREE.Quaternion().slerp(rotation, eased);
-    const direction = flight.from.clone().applyQuaternion(step);
-    this.mainCamera.position.copy(this.controls.target).addScaledVector(direction, flight.distance);
-    this.mainCamera.lookAt(this.controls.target);
-    this.controls.update();
-    if (t >= 1) this.flight = null;
   }
 
   private bindEvents(): void {

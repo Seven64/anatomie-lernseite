@@ -1,14 +1,6 @@
 import { UserSettings, BodySystem } from "../types";
 import { formatStructureName } from "./text";
-
-const DEFAULT_SETTINGS: UserSettings = {
-  theme: "light",
-  labelLanguage: "latin",
-  dailyGoal: 20,
-  showLabels: true,
-  cameraDistance: 2,
-  autoRotate: false,
-};
+import { DEFAULT_SETTINGS, sanitizeSettings } from "./settingsData";
 
 const STORAGE_KEY = "anatomy-settings";
 
@@ -27,12 +19,12 @@ export class SettingsManager {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+        return { ...DEFAULT_SETTINGS, ...sanitizeSettings(JSON.parse(stored)) };
       }
     } catch {
       // Ignore parse errors
     }
-    return DEFAULT_SETTINGS;
+    return { ...DEFAULT_SETTINGS };
   }
 
   private saveToStorage(): void {
@@ -75,6 +67,14 @@ export class SettingsManager {
 
   getAll(): UserSettings {
     return { ...this.settings };
+  }
+
+  /** Übernimmt gültige Werte aus einer Datensicherung. */
+  importSettings(raw: unknown): void {
+    this.settings = { ...this.settings, ...sanitizeSettings(raw) };
+    this.saveToStorage();
+    this.applyTheme(this.settings.theme);
+    this.notifyListeners();
   }
 
   reset(): void {

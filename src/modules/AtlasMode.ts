@@ -3,8 +3,8 @@ import { DataManager } from "../utils/DataManager";
 import { UIManager } from "../utils/UIManager";
 import { SettingsManager } from "../utils/SettingsManager";
 import { BodySystem, CuttingAxis, Structure } from "../types";
-import { LAYERED_SYSTEMS, SYSTEM_LABELS } from "../ui/constants";
-import { computeVisibleBounds, createHighlightMaterial, frameCameraToBounds, readCssColor } from "../utils/three";
+import { INITIALLY_HIDDEN, LAYERED_SYSTEMS, SYSTEM_LABELS } from "../ui/constants";
+import { computeVisibleBounds, createHighlightMaterial, fitDistance, readCssColor } from "../utils/three";
 import { AtlasScene } from "./atlas/AtlasScene";
 import { ModelRegistry } from "./atlas/ModelRegistry";
 import { CuttingPlanes } from "./atlas/CuttingPlanes";
@@ -33,7 +33,7 @@ const LOADING_HTML = `
     <div class="loading-text">Lade 3D-Modell …</div>
     <div class="loading-progress"><span class="loading-progress-bar"></span></div>
   </div>`;
-const CLICK_TOLERANCE_PX = 5;
+const CLICK_TOLERANCE_PX = { mouse: 5, pen: 8, touch: 12 } as const;
 const INITIAL_SYSTEM: BodySystem = "skeletal";
 
 /**
@@ -50,7 +50,7 @@ export class AtlasMode {
   private layerAbort = new AbortController();
   private selectedId: string | null = null;
   private pendingHover: PointerEvent | null = null;
-  private pointerDown: { x: number; y: number } | null = null;
+  private pointerDown: { x: number; y: number; type: string } | null = null;
   private readonly raycaster = new THREE.Raycaster();
 
   constructor(
@@ -74,7 +74,7 @@ export class AtlasMode {
     const cutting = new CuttingPlanes(readCssColor("--accent-primary", "#594bd2"));
     view.scene.add(cutting.helpers);
     const models = new ModelRegistry(this.dataManager, cutting.planes);
-    const viewCube = new ViewCube(container, view.camera, view.controls, () => this.frameVisible());
+    const viewCube = new ViewCube(container, view.camera, view.controls, () => this.frameVisible("home"));
     const ghost = new THREE.MeshStandardMaterial({
       color: 0xb7c1d6, transparent: true, opacity: 0.12, depthWrite: false, clippingPlanes: cutting.planes,
     });
@@ -82,7 +82,7 @@ export class AtlasMode {
 
     view.onFrame(now => {
       cutting.updateHelpers(now);
-      viewCube.update(now);
+      viewCube.update();
       this.processHover();
     });
     this.bindEvents();
@@ -110,6 +110,8 @@ export class AtlasMode {
     this.layerAbort.abort();
     rt.events.abort();
     this.uiManager.hideHoverLabel();
+    // Das Info-Panel gehört zum Atlas und würde sonst andere Modi überdecken.
+    this.uiManager.closePanel();
     rt.viewCube.dispose();
     rt.cutting.dispose();
     rt.models.dispose();
@@ -148,14 +150,19 @@ export class AtlasMode {
       this.uiManager.hideHoverLabel();
       canvas.style.cursor = "grab";
     }, { signal });
-    canvas.addEventListener("pointerdown", event => { this.pointerDown = { x: event.clientX, y: event.clientY }; }, { signal });
+    canvas.addEventListener("pointerdown", event => {
+      this.pointerDown = { x: event.clientX, y: event.clientY, type: event.pointerType };
+    }, { signal });
     canvas.addEventListener("click", event => {
       // Nach dem Drehen/Verschieben der Ansicht keine Struktur auswählen.
       const start = this.pointerDown;
-      if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > CLICK_TOLERANCE_PX) return;
+      const tolerance = CLICK_TOLERANCE_PX[(start?.type ?? "mouse") as keyof typeof CLICK_TOLERANCE_PX] ?? 5;
+      if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > tolerance) return;
       const hit = this.pick(event);
       if (hit) this.uiManager.selectStructure(hit.structure.id);
     }, { signal });
+    rt.view.controls.onDoubleActivate = (x, y) => this.focusAt(x, y);
+    rt.view.controls.onInteraction = () => this.uiManager.hideHoverLabel();
     window.addEventListener("theme-applied", () => {
       rt.view.updateBackground();
       rt.viewCube.applyTheme();
@@ -285,10 +292,17 @@ export class AtlasMode {
   }
 
   async onSystemToggled(system: BodySystem, visible: boolean): Promise<void> {
+    const wasVisible = this.systemVisibility.get(system) ?? false;
     this.systemVisibility.set(system, visible);
-    this.dataManager.getStructuresBySystemSync(system).forEach(structure =>
-      visible ? this.hiddenIds.delete(structure.id) : this.hiddenIds.add(structure.id)
-    );
+    this.uiManager.setSystemVisibility(system, visible);
+    // Beim ersten Einblenden verdeckende Hüllen (z. B. Faszien) zunächst verbergen;
+    // ein erneuter Klick auf das teilweise sichtbare System zeigt dann alles.
+    const initiallyHidden = !wasVisible ? INITIALLY_HIDDEN[system] : undefined;
+    this.dataManager.getStructuresBySystemSync(system).forEach(structure => {
+      const hide = !visible || Boolean(initiallyHidden?.test(structure.nameLatin));
+      if (hide) this.hiddenIds.add(structure.id);
+      else this.hiddenIds.delete(structure.id);
+    });
     if (!visible) {
       this.uiManager.hideHoverLabel();
       const selected = this.selectedId ? this.dataManager.getStructureSync(this.selectedId) : undefined;
@@ -309,18 +323,44 @@ export class AtlasMode {
 
   private frameIfIsolated(system: BodySystem): void {
     const others = [...this.systemVisibility].some(([other, visible]) => other !== system && visible);
-    if (!others) this.frameVisible();
+    if (!others) this.frameVisible("keep");
   }
 
-  /** Kamera auf alle sichtbaren Strukturen ausrichten. */
-  private frameVisible(): void {
+  /**
+   * Kamera animiert auf alle sichtbaren Strukturen ausrichten.
+   * „home“ = Vorderansicht, „keep“ = aktuelle Blickrichtung beibehalten.
+   */
+  private frameVisible(mode: "home" | "keep" = "keep"): void {
     const rt = this.rt;
     if (!rt) return;
     const bounds = new THREE.Box3();
     rt.models.groups.forEach(group => {
       if (group.visible) bounds.union(computeVisibleBounds(group));
     });
-    frameCameraToBounds(rt.view.camera, rt.view.controls, bounds, rt.view.framingPadding);
+    this.flyToBounds(bounds, mode);
+  }
+
+  private flyToBounds(bounds: THREE.Box3, mode: "home" | "keep", padding?: number): void {
+    const rt = this.rt;
+    if (!rt || bounds.isEmpty()) return;
+    const { camera, controls } = rt.view;
+    controls.flyTo({
+      target: bounds.getCenter(new THREE.Vector3()),
+      distance: fitDistance(camera, bounds, padding ?? rt.view.framingPadding),
+      ...(mode === "home" ? { direction: new THREE.Vector3(0, 0, 1), up: new THREE.Vector3(0, 1, 0) } : {}),
+    });
+  }
+
+  /** Doppelklick/-tipp: auf die getroffene Struktur fokussieren, sonst alles einpassen. */
+  private focusAt(clientX: number, clientY: number): void {
+    const hit = this.pick(new MouseEvent("dblclick", { clientX, clientY }));
+    if (!hit || !this.rt) {
+      this.frameVisible("keep");
+      return;
+    }
+    const bounds = new THREE.Box3();
+    this.rt.models.meshesOf(hit.structure.id).forEach(mesh => bounds.expandByObject(mesh));
+    this.flyToBounds(bounds, "keep", 2.2);
   }
 
   // --- Schnitt, Auswahl, Picking ------------------------------------------
@@ -394,7 +434,7 @@ export class AtlasMode {
     this.peel.delete(selected.system);
     this.uiManager.resetLayerControls();
     this.refresh();
-    this.frameVisible();
+    this.frameVisible("keep");
   }
 
   hideStructure(structure: { id: string }): void {
@@ -417,6 +457,6 @@ export class AtlasMode {
       this.uiManager.setSystemOpacity(system, 1);
     });
     this.refresh();
-    this.frameVisible();
+    this.frameVisible("home");
   }
 }

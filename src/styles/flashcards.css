@@ -91,3 +91,40 @@
   font-size: var(--font-size-xs);
   color: var(--fg-secondary);
 }
+
+.flashcard[hidden],
+.flashcard-complete[hidden] {
+  display: none;
+}
+
+.flashcard-complete {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--spacing-6);
+  text-align: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.flashcard-complete-icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-4);
+}
+
+.flashcard-complete h2 {
+  margin-bottom: var(--spacing-3);
+}
+
+.flashcard-complete p {
+  color: var(--fg-secondary);
+  margin-bottom: var(--spacing-6);
+}
+
+.flashcard-complete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+}

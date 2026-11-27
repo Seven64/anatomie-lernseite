@@ -115,7 +115,8 @@ export class SettingsModal {
   }
 
   private async exportData(): Promise<void> {
-    const data = await this.dataManager.exportAllData();
+    // Einstellungen liegen im localStorage (SettingsManager), nicht in IndexedDB.
+    const data = { ...await this.dataManager.exportAllData(), settings: this.settingsManager.getAll() };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -133,7 +134,9 @@ export class SettingsModal {
     const reader = new FileReader();
     reader.onload = async () => {
       try {
-        await this.dataManager.importData(JSON.parse(reader.result as string));
+        const data = JSON.parse(reader.result as string);
+        await this.dataManager.importData(data);
+        if (data?.settings) this.settingsManager.importSettings(data.settings);
         showToast("Daten importiert", "success");
         closeModal();
         location.reload();
@@ -148,6 +151,12 @@ export class SettingsModal {
   private async clearData(): Promise<void> {
     if (!confirm("Wirklich alle lokalen Daten löschen? Dies kann nicht rückgängig gemacht werden.")) return;
     await this.dataManager.clearAllData();
+    // Einstellungen und Tageszähler liegen im localStorage.
+    try {
+      localStorage.clear();
+    } catch {
+      // Speicher nicht verfügbar – nichts zu löschen
+    }
     showToast("Daten gelöscht", "success");
     closeModal();
     location.reload();

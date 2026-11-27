@@ -1,8 +1,8 @@
 {
-  "version": "1.1",
+  "version": "1.2",
   "source": "Z-Anatomy Models of Human Anatomy",
   "license": "CC BY-SA 4.0",
-  "exported": "2026-11-24T23:29:34.516Z",
+  "exported": "2026-11-26T11:06:07.115Z",
   "structures": [
     {
       "id": "skeletal_systemg",
@@ -53541,6 +53541,2625 @@
       "objectName": "(Superficial branch of transverse cervical artery).r",
       "glbFile": "cardiovascular/cardiovascular.glb",
       "parentId": "transverse_cervical_arteryr",
+      "childrenIds": []
+    },
+    {
+      "id": "central_canal_2",
+      "nameLatin": "Central canal'",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Central canal'",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "olfactory_nerve_ir",
+      "nameLatin": "Olfactory nerve (I).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Olfactory nerve (I).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "olfactory_nerve_il",
+      "nameLatin": "Olfactory nerve (I).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Olfactory nerve (I).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "optic_nerve_iir",
+      "nameLatin": "Optic nerve (II).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Optic nerve (II).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "optic_nerve_iil",
+      "nameLatin": "Optic nerve (II).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Optic nerve (II).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "oculomotor_nerve_iiir",
+      "nameLatin": "Oculomotor nerve (III).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Oculomotor nerve (III).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "oculomotor_nerve_iiil",
+      "nameLatin": "Oculomotor nerve (III).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Oculomotor nerve (III).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "trigeminal_nerve_vr",
+      "nameLatin": "Trigeminal nerve (V).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Trigeminal nerve (V).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_alveolar_nerver",
+      "nameLatin": "Inferior alveolar nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Inferior alveolar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "mental_nerver",
+      "nameLatin": "Mental nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Mental nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_mylohyoid_muscler",
+      "nameLatin": "Nerve to mylohyoid muscle.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Nerve to mylohyoid muscle.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "buccal_nerver",
+      "nameLatin": "Buccal nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Buccal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_mandibular_nerver",
+      "nameLatin": "Posterior division of mandibular nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Posterior division of mandibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_mandibular_nerver",
+      "nameLatin": "Anterior division of mandibular nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Anterior division of mandibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lingual_nerver",
+      "nameLatin": "Lingual nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lingual nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "maxillary_nerver",
+      "nameLatin": "Maxillary nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Maxillary nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ophthalmic_nerver",
+      "nameLatin": "Ophthalmic nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Ophthalmic nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "meningeal_branch_of_maxillary_nerver",
+      "nameLatin": "Meningeal branch of maxillary nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Meningeal branch of maxillary nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "trigeminal_nerve_vl",
+      "nameLatin": "Trigeminal nerve (V).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Trigeminal nerve (V).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "mental_nervel",
+      "nameLatin": "Mental nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Mental nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_mylohyoid_musclel",
+      "nameLatin": "Nerve to mylohyoid muscle.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Nerve to mylohyoid muscle.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "buccal_nervel",
+      "nameLatin": "Buccal nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Buccal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_mandibular_nervel",
+      "nameLatin": "Posterior division of mandibular nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Posterior division of mandibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_mandibular_nervel",
+      "nameLatin": "Anterior division of mandibular nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Anterior division of mandibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lingual_nervel",
+      "nameLatin": "Lingual nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Lingual nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "maxillary_nervel",
+      "nameLatin": "Maxillary nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Maxillary nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ophthalmic_nervel",
+      "nameLatin": "Ophthalmic nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Ophthalmic nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "meningeal_branch_of_maxillary_nervel",
+      "nameLatin": "Meningeal branch of maxillary nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Meningeal branch of maxillary nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_alveolar_nervel",
+      "nameLatin": "Inferior alveolar nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Inferior alveolar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "chorda_tympanir",
+      "nameLatin": "Chorda tympani.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Chorda tympani.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "chorda_tympanil",
+      "nameLatin": "Chorda tympani.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Chorda tympani.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "facial_nerve_viir",
+      "nameLatin": "Facial nerve (VII).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Facial nerve (VII).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "facial_nerve_viil",
+      "nameLatin": "Facial nerve (VII).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Facial nerve (VII).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vestibular_nervel",
+      "nameLatin": "Vestibular nerve.l",
+      "system": "nervous",
+      "region": "thorax",
+      "objectName": "Vestibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vestibular_nerver",
+      "nameLatin": "Vestibular nerve.r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Vestibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "cochlear_nervel",
+      "nameLatin": "Cochlear nerve.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Cochlear nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vestibulocochlear_nerve_viiil",
+      "nameLatin": "Vestibulocochlear nerve (VIII).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Vestibulocochlear nerve (VIII).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vestibulocochlear_nerve_viiir",
+      "nameLatin": "Vestibulocochlear nerve (VIII).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Vestibulocochlear nerve (VIII).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "glossopharyngeal_nerve_ixr",
+      "nameLatin": "Glossopharyngeal nerve (IX).r",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Glossopharyngeal nerve (IX).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "glossopharyngeal_nerve_ixl",
+      "nameLatin": "Glossopharyngeal nerve (IX).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Glossopharyngeal nerve (IX).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vagus_nerve_xr",
+      "nameLatin": "Vagus nerve (X).r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Vagus nerve (X).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "vagus_nerve_xl",
+      "nameLatin": "Vagus nerve (X).l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Vagus nerve (X).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "accessory_nerve_xir",
+      "nameLatin": "Accessory nerve (XI).r",
+      "system": "nervous",
+      "region": "back",
+      "objectName": "Accessory nerve (XI).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "accessory_nerve_xil",
+      "nameLatin": "Accessory nerve (XI).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Accessory nerve (XI).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "hypoglossal_nerve_xiir",
+      "nameLatin": "Hypoglossal nerve (XII).r",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Hypoglossal nerve (XII).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "hypoglossal_nerve_xiil",
+      "nameLatin": "Hypoglossal nerve (XII).l",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Hypoglossal nerve (XII).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "abducens_nerve_vir",
+      "nameLatin": "Abducens nerve (VI).r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Abducens nerve (VI).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "trochlear_nerve_ivr",
+      "nameLatin": "Trochlear nerve (IV).r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Trochlear nerve (IV).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "abducens_nerve_vil",
+      "nameLatin": "Abducens nerve (VI).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Abducens nerve (VI).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "trochlear_nerve_ivl",
+      "nameLatin": "Trochlear nerve (IV).l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Trochlear nerve (IV).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_trunk_of_brachial_plexusr",
+      "nameLatin": "Superior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Superior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_superior_trunk_of_brachial_plexusr",
+      "nameLatin": "Posterior division of superior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of superior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_trunk_of_brachial_plexusl",
+      "nameLatin": "Superior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_superior_trunk_of_brachial_plexusl",
+      "nameLatin": "Posterior division of superior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of superior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_superior_trunk_of_brachial_plexusl",
+      "nameLatin": "Anterior division of superior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of superior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "middle_trunk_of_brachial_plexusr",
+      "nameLatin": "Middle trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Middle trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_middle_trunk_of_brachial_plexusr",
+      "nameLatin": "Anterior division of middle trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of middle trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_middle_trunk_of_brachial_plexusr",
+      "nameLatin": "Posterior division of middle trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of middle trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "middle_trunk_of_brachial_plexusl",
+      "nameLatin": "Middle trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Middle trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_middle_trunk_of_brachial_plexusl",
+      "nameLatin": "Anterior division of middle trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of middle trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_middle_trunk_of_brachial_plexusl",
+      "nameLatin": "Posterior division of middle trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of middle trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_trunk_of_brachial_plexusr",
+      "nameLatin": "Inferior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_trunk_of_brachial_plexusl",
+      "nameLatin": "Inferior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_inferior_trunk_of_brachial_plexusl",
+      "nameLatin": "Anterior division of inferior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of inferior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_inferior_trunk_of_brachial_plexusl",
+      "nameLatin": "Posterior division of inferior trunk of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of inferior trunk of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "roots_of_brachial_plexusr",
+      "nameLatin": "Roots of brachial plexus.r",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Roots of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "roots_of_brachial_plexusl",
+      "nameLatin": "Roots of brachial plexus.l",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Roots of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_scapular_nerver",
+      "nameLatin": "Dorsal scapular nerve.r",
+      "system": "nervous",
+      "region": "back",
+      "objectName": "Dorsal scapular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "long_thoracic_nerver",
+      "nameLatin": "Long thoracic nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Long thoracic nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "suprascapular_nerver",
+      "nameLatin": "Suprascapular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Suprascapular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "subclavian_nerver",
+      "nameLatin": "Subclavian nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Subclavian nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_scapular_nervel",
+      "nameLatin": "Dorsal scapular nerve.l",
+      "system": "nervous",
+      "region": "back",
+      "objectName": "Dorsal scapular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "long_thoracic_nervel",
+      "nameLatin": "Long thoracic nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Long thoracic nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "suprascapular_nervel",
+      "nameLatin": "Suprascapular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Suprascapular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "subclavian_nervel",
+      "nameLatin": "Subclavian nerve.l",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Subclavian nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "axillary_nerver",
+      "nameLatin": "Axillary nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Axillary nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_cord_of_brachial_plexusr",
+      "nameLatin": "Posterior cord of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior cord of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "axillary_nervel",
+      "nameLatin": "Axillary nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Axillary nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_cord_of_brachial_plexusl",
+      "nameLatin": "Posterior cord of brachial plexus.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior cord of brachial plexus.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_pectoral_nerver",
+      "nameLatin": "Lateral pectoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral pectoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_pectoral_nervel",
+      "nameLatin": "Lateral pectoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral pectoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "musculocutaneous_nerver",
+      "nameLatin": "Musculocutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Musculocutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_antebrachial_cutaneous_nerver",
+      "nameLatin": "Lateral antebrachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral antebrachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "musculocutaneous_nervel",
+      "nameLatin": "Musculocutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Musculocutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_antebrachial_cutaneous_nervel",
+      "nameLatin": "Lateral antebrachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral antebrachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_branch_of_radial_nerver",
+      "nameLatin": "Deep branch of radial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep branch of radial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_interosseous_nerve_of_forearmr",
+      "nameLatin": "Posterior interosseous nerve of forearm.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior interosseous nerve of forearm.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_branch_of_radial_nervel",
+      "nameLatin": "Deep branch of radial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep branch of radial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_interosseous_nerve_of_forearml",
+      "nameLatin": "Posterior interosseous nerve of forearm.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior interosseous nerve of forearm.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_branch_of_radial_nerver",
+      "nameLatin": "Superficial branch of radial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial branch of radial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_radial_nerver",
+      "nameLatin": "Dorsal digital branches of radial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of radial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_branch_of_radial_nervel",
+      "nameLatin": "Superficial branch of radial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial branch of radial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_radial_nervel",
+      "nameLatin": "Dorsal digital branches of radial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of radial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_antebrachial_cutaneous_nerver",
+      "nameLatin": "Posterior antebrachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior antebrachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "radial_nerver",
+      "nameLatin": "Radial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Radial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_lateral_brachial_cutaneous_nerver",
+      "nameLatin": "Inferior lateral brachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior lateral brachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_radial_nerver",
+      "nameLatin": "Muscular branches of radial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of radial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_antebrachial_cutaneous_nervel",
+      "nameLatin": "Posterior antebrachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior antebrachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "radial_nervel",
+      "nameLatin": "Radial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Radial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_lateral_brachial_cutaneous_nervel",
+      "nameLatin": "Inferior lateral brachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior lateral brachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_radial_nervel",
+      "nameLatin": "Muscular branches of radial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of radial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_lateral_brachial_cutaneous_nerver",
+      "nameLatin": "Superior lateral brachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior lateral brachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_axillary_nerver",
+      "nameLatin": "Muscular branches of axillary nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of axillary nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_lateral_brachial_cutaneous_nervel",
+      "nameLatin": "Superior lateral brachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior lateral brachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_axillary_nervel",
+      "nameLatin": "Muscular branches of axillary nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of axillary nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_branch_of_medial_antebrachial_cutaneous_nerver",
+      "nameLatin": "Anterior branch of medial antebrachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior branch of medial antebrachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_branch_of_medial_antebrachial_cutaneous_nerver",
+      "nameLatin": "Posterior branch of medial antebrachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior branch of medial antebrachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_antebrachial_cutaneous_nerver",
+      "nameLatin": "Medial antebrachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial antebrachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_branch_of_medial_antebrachial_cutaneous_nervel",
+      "nameLatin": "Anterior branch of medial antebrachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior branch of medial antebrachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_branch_of_medial_antebrachial_cutaneous_nervel",
+      "nameLatin": "Posterior branch of medial antebrachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior branch of medial antebrachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_antebrachial_cutaneous_nervel",
+      "nameLatin": "Medial antebrachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial antebrachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_ulnar_nerver",
+      "nameLatin": "Dorsal digital branches of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_branch_of_ulnar_nerver",
+      "nameLatin": "Dorsal branch of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal branch of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_ulnar_nervel",
+      "nameLatin": "Dorsal digital branches of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_branch_of_ulnar_nervel",
+      "nameLatin": "Dorsal branch of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal branch of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_palmar_digital_branches_of_ulnar_nerver",
+      "nameLatin": "Proper palmar digital branches of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper palmar digital branches of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_palmar_digital_branches_of_ulnar_nervel",
+      "nameLatin": "Proper palmar digital branches of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper palmar digital branches of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_palmar_digital_branches_of_ulnar_nerver",
+      "nameLatin": "Common palmar digital branches of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common palmar digital branches of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_branch_of_ulnar_nerver",
+      "nameLatin": "Superficial branch of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial branch of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_palmar_digital_branches_of_ulnar_nervel",
+      "nameLatin": "Common palmar digital branches of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common palmar digital branches of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_branch_of_ulnar_nervel",
+      "nameLatin": "Superficial branch of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial branch of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "palmar_branch_of_ulnar_nerver",
+      "nameLatin": "Palmar branch of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Palmar branch of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_branch_of_ulnar_nerver",
+      "nameLatin": "Deep branch of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep branch of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_ulnar_nerver",
+      "nameLatin": "Muscular branches of ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ulnar_nerver",
+      "nameLatin": "Ulnar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Ulnar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "palmar_branch_of_ulnar_nervel",
+      "nameLatin": "Palmar branch of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Palmar branch of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_branch_of_ulnar_nervel",
+      "nameLatin": "Deep branch of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep branch of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_ulnar_nervel",
+      "nameLatin": "Muscular branches of ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ulnar_nervel",
+      "nameLatin": "Ulnar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Ulnar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_brachial_cutaneous_nerver",
+      "nameLatin": "Medial brachial cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial brachial cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_brachial_cutaneous_nervel",
+      "nameLatin": "Medial brachial cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial brachial cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_palmar_digital_branches_of_median_nerver",
+      "nameLatin": "Proper palmar digital branches of median nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper palmar digital branches of median nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_palmar_digital_branches_of_median_nervel",
+      "nameLatin": "Proper palmar digital branches of median nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper palmar digital branches of median nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_palmar_digital_branches_of_median_nerver",
+      "nameLatin": "Common palmar digital branches of median nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common palmar digital branches of median nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "communicating_branch_of_median_nerve_with_ulnar_nerver",
+      "nameLatin": "(Communicating branch of median nerve with ulnar nerve).r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "(Communicating branch of median nerve with ulnar nerve).r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "median_nerver",
+      "nameLatin": "Median nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Median nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_interosseous_nerve_of_forearmr",
+      "nameLatin": "Anterior interosseous nerve of forearm.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior interosseous nerve of forearm.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "palmar_branch_of_median_nerver",
+      "nameLatin": "Palmar branch of median nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Palmar branch of median nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_median_nerver",
+      "nameLatin": "Muscular branches of median nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of median nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_palmar_digital_branches_of_median_nervel",
+      "nameLatin": "Common palmar digital branches of median nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common palmar digital branches of median nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "communicating_branch_of_median_nerve_with_ulnar_nervel",
+      "nameLatin": "(Communicating branch of median nerve with ulnar nerve).l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "(Communicating branch of median nerve with ulnar nerve).l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "median_nervel",
+      "nameLatin": "Median nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Median nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_interosseous_nerve_of_forearml",
+      "nameLatin": "Anterior interosseous nerve of forearm.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior interosseous nerve of forearm.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "palmar_branch_of_median_nervel",
+      "nameLatin": "Palmar branch of median nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Palmar branch of median nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_median_nervel",
+      "nameLatin": "Muscular branches of median nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of median nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "intercostal_nervesr",
+      "nameLatin": "Intercostal nerves.r",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Intercostal nerves.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "intercostal_nervesl",
+      "nameLatin": "Intercostal nerves.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Intercostal nerves.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "iliohypogastric_nerver",
+      "nameLatin": "Iliohypogastric nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Iliohypogastric nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "iliohypogastric_nervel",
+      "nameLatin": "Iliohypogastric nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Iliohypogastric nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ilio_inguinal_nerver",
+      "nameLatin": "Ilio-inguinal nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Ilio-inguinal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ilio_inguinal_nervel",
+      "nameLatin": "Ilio-inguinal nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Ilio-inguinal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "infrapatellar_branch_of_saphenous_nerver",
+      "nameLatin": "Infrapatellar branch of saphenous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Infrapatellar branch of saphenous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "saphenous_nerver",
+      "nameLatin": "Saphenous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Saphenous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_crural_cutaneous_branches_of_saphenous_nerver",
+      "nameLatin": "Medial crural cutaneous branches of saphenous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial crural cutaneous branches of saphenous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sural_nerver",
+      "nameLatin": "Sural nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sural nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sural_communicating_branch_of_common_fibular_nerver",
+      "nameLatin": "Sural communicating branch of common fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sural communicating branch of common fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_sural_cutaneous_nerver",
+      "nameLatin": "Medial sural cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial sural cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "infrapatellar_branch_of_saphenous_nervel",
+      "nameLatin": "Infrapatellar branch of saphenous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Infrapatellar branch of saphenous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "saphenous_nervel",
+      "nameLatin": "Saphenous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Saphenous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_crural_cutaneous_branches_of_saphenous_nervel",
+      "nameLatin": "Medial crural cutaneous branches of saphenous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial crural cutaneous branches of saphenous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sural_nervel",
+      "nameLatin": "Sural nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sural nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sural_communicating_branch_of_common_fibular_nervel",
+      "nameLatin": "Sural communicating branch of common fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sural communicating branch of common fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_sural_cutaneous_nervel",
+      "nameLatin": "Medial sural cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial sural cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_cutaneous_branches_of_femoral_nerver",
+      "nameLatin": "Anterior cutaneous branches of femoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior cutaneous branches of femoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_cutaneous_branches_of_femoral_nervel",
+      "nameLatin": "Anterior cutaneous branches of femoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior cutaneous branches of femoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "femoral_nerver",
+      "nameLatin": "Femoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Femoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_femoral_cutaneous_nerver",
+      "nameLatin": "Lateral femoral cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral femoral cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "femoral_nervel",
+      "nameLatin": "Femoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Femoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_femoral_cutaneous_nervel",
+      "nameLatin": "Lateral femoral cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral femoral cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "obturator_nerver",
+      "nameLatin": "Obturator nerve.r",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Obturator nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_branch_of_obturator_nerver",
+      "nameLatin": "Posterior branch of obturator nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior branch of obturator nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_branch_of_obturator_nerver",
+      "nameLatin": "Anterior branch of obturator nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior branch of obturator nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "obturator_nervel",
+      "nameLatin": "Obturator nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Obturator nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_branch_of_obturator_nervel",
+      "nameLatin": "Posterior branch of obturator nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior branch of obturator nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_branch_of_obturator_nervel",
+      "nameLatin": "Anterior branch of obturator nerve.l",
+      "system": "nervous",
+      "region": "pelvis",
+      "objectName": "Anterior branch of obturator nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "genitofemoral_nerver",
+      "nameLatin": "Genitofemoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Genitofemoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "femoral_branch_of_genitofemoral_nerver",
+      "nameLatin": "Femoral branch of genitofemoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Femoral branch of genitofemoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "genital_branch_of_genitofemoral_nerver",
+      "nameLatin": "Genital branch of genitofemoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Genital branch of genitofemoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "genitofemoral_nervel",
+      "nameLatin": "Genitofemoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Genitofemoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "femoral_branch_of_genitofemoral_nervel",
+      "nameLatin": "Femoral branch of genitofemoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Femoral branch of genitofemoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "genital_branch_of_genitofemoral_nervel",
+      "nameLatin": "Genital branch of genitofemoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Genital branch of genitofemoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_superficial_fibular_nerver",
+      "nameLatin": "Dorsal digital branches of superficial fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of superficial fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_fibular_nerver",
+      "nameLatin": "Superficial fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_dorsal_cutaneous_nerve_of_footr",
+      "nameLatin": "Medial dorsal cutaneous nerve of foot.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial dorsal cutaneous nerve of foot.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "intermediate_dorsal_cutaneous_nerve_of_footr",
+      "nameLatin": "Intermediate dorsal cutaneous nerve of foot.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Intermediate dorsal cutaneous nerve of foot.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_superficial_fibular_nervel",
+      "nameLatin": "Dorsal digital branches of superficial fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of superficial fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superficial_fibular_nervel",
+      "nameLatin": "Superficial fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superficial fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_dorsal_cutaneous_nerve_of_footl",
+      "nameLatin": "Medial dorsal cutaneous nerve of foot.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial dorsal cutaneous nerve of foot.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "intermediate_dorsal_cutaneous_nerve_of_footl",
+      "nameLatin": "Intermediate dorsal cutaneous nerve of foot.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Intermediate dorsal cutaneous nerve of foot.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_deep_fibular_nerver",
+      "nameLatin": "Dorsal digital branches of deep fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of deep fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_deep_fibular_nerver",
+      "nameLatin": "Muscular branches of deep fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of deep fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_fibular_nerver",
+      "nameLatin": "Deep fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "dorsal_digital_branches_of_deep_fibular_nervel",
+      "nameLatin": "Dorsal digital branches of deep fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Dorsal digital branches of deep fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "muscular_branches_of_deep_fibular_nervel",
+      "nameLatin": "Muscular branches of deep fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Muscular branches of deep fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "deep_fibular_nervel",
+      "nameLatin": "Deep fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Deep fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sciatic_nerver",
+      "nameLatin": "Sciatic nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sciatic nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "tibial_nerver",
+      "nameLatin": "Tibial nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Tibial nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_plantar_digital_branches_of_medial_plantar_nerver",
+      "nameLatin": "Proper plantar digital branches of medial plantar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper plantar digital branches of medial plantar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_plantar_digital_branches_of_lateral_plantar_nerver",
+      "nameLatin": "Common plantar digital branches of lateral plantar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common plantar digital branches of lateral plantar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_plantar_nerver",
+      "nameLatin": "Lateral plantar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Lateral plantar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_plantar_nerver",
+      "nameLatin": "Medial plantar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial plantar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_fibular_nerver",
+      "nameLatin": "Common fibular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common fibular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sciatic_nervel",
+      "nameLatin": "Sciatic nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Sciatic nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "tibial_nervel",
+      "nameLatin": "Tibial nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Tibial nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_plantar_digital_branches_of_medial_plantar_nervel",
+      "nameLatin": "Proper plantar digital branches of medial plantar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper plantar digital branches of medial plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_plantar_digital_branches_of_lateral_plantar_nervel",
+      "nameLatin": "Common plantar digital branches of lateral plantar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common plantar digital branches of lateral plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_plantar_nervel",
+      "nameLatin": "Lateral plantar nerve.l",
+      "system": "nervous",
+      "region": "thorax",
+      "objectName": "Lateral plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_plantar_nervel",
+      "nameLatin": "Medial plantar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_fibular_nervel",
+      "nameLatin": "Common fibular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common fibular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_plantar_digital_branches_of_lateral_plantar_nerver",
+      "nameLatin": "Proper plantar digital branches of lateral plantar nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper plantar digital branches of lateral plantar nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "proper_plantar_digital_branches_of_lateral_plantar_nervel",
+      "nameLatin": "Proper plantar digital branches of lateral plantar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Proper plantar digital branches of lateral plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_plantar_digital_branches_of_medial_plantar_nerve",
+      "nameLatin": "Common plantar digital branches of medial plantar nerve",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common plantar digital branches of medial plantar nerve",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "common_plantar_digital_branches_of_medial_plantar_nervel",
+      "nameLatin": "Common plantar digital branches of medial plantar nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Common plantar digital branches of medial plantar nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sympathetic_nervesr",
+      "nameLatin": "Sympathetic nerves.r",
+      "system": "nervous",
+      "region": "thorax",
+      "objectName": "Sympathetic nerves.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sympathetic_trunkr",
+      "nameLatin": "Sympathetic trunk.r",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Sympathetic trunk.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sympathetic_nervesl",
+      "nameLatin": "Sympathetic nerves.l",
+      "system": "nervous",
+      "region": "thorax",
+      "objectName": "Sympathetic nerves.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "sympathetic_trunkl",
+      "nameLatin": "Sympathetic trunk.l",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Sympathetic trunk.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "cauda_equina",
+      "nameLatin": "Cauda equina",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Cauda equina",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_root_of_spinal_nerver",
+      "nameLatin": "Posterior root of spinal nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior root of spinal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_root_of_spinal_nerver",
+      "nameLatin": "Anterior root of spinal nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior root of spinal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_superior_trunk_of_brachial_plexusr",
+      "nameLatin": "Anterior division of superior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of superior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_division_of_inferior_trunk_of_brachial_plexusr",
+      "nameLatin": "Anterior division of inferior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior division of inferior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_division_of_inferior_trunk_of_brachial_plexusr",
+      "nameLatin": "Posterior division of inferior trunk of brachial plexus.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior division of inferior trunk of brachial plexus.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_pectoral_nerver",
+      "nameLatin": "Medial pectoral nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial pectoral nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_pectoral_nervel",
+      "nameLatin": "Medial pectoral nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Medial pectoral nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_subscapular_nerver",
+      "nameLatin": "Superior subscapular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior subscapular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_subscapular_nerver",
+      "nameLatin": "Inferior subscapular nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior subscapular nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "thoracodorsal_nerver",
+      "nameLatin": "Thoracodorsal nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Thoracodorsal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "thoracodorsal_nervel",
+      "nameLatin": "Thoracodorsal nerve.l",
+      "system": "nervous",
+      "region": "neck",
+      "objectName": "Thoracodorsal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_gluteal_nervel",
+      "nameLatin": "Superior gluteal nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior gluteal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_gluteal_nerver",
+      "nameLatin": "Superior gluteal nerve.r",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Superior gluteal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_piriformis_muscler",
+      "nameLatin": "Nerve to piriformis muscle.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Nerve to piriformis muscle.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_piriformis_musclel",
+      "nameLatin": "Nerve to piriformis muscle.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Nerve to piriformis muscle.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_quadratus_femoris_muscler",
+      "nameLatin": "Nerve to quadratus femoris muscle.r",
+      "system": "nervous",
+      "region": "pelvis",
+      "objectName": "Nerve to quadratus femoris muscle.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "nerve_to_quadratus_femoris_musclel",
+      "nameLatin": "Nerve to quadratus femoris muscle.l",
+      "system": "nervous",
+      "region": "head",
+      "objectName": "Nerve to quadratus femoris muscle.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_femoral_cutaneous_nerver",
+      "nameLatin": "Posterior femoral cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior femoral cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_root_of_posterior_femoral_cutaneous_nerver",
+      "nameLatin": "Anterior root of posterior femoral cutaneous nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior root of posterior femoral cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_root_of_posterior_femoral_cutaneous_nerver",
+      "nameLatin": "Posterior root of posterior femoral cutaneous nerve.r",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Posterior root of posterior femoral cutaneous nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_root_of_posterior_femoral_cutaneous_nervel",
+      "nameLatin": "Posterior root of posterior femoral cutaneous nerve.l",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Posterior root of posterior femoral cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "pudendal_nervel",
+      "nameLatin": "Pudendal nerve.l",
+      "system": "nervous",
+      "region": "abdomen",
+      "objectName": "Pudendal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "pudendal_nerver",
+      "nameLatin": "Pudendal nerve.r",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Pudendal nerve.r",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_root_of_spinal_nervel",
+      "nameLatin": "Posterior root of spinal nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior root of spinal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_root_of_spinal_nervel",
+      "nameLatin": "Anterior root of spinal nerve.l",
+      "system": "nervous",
+      "region": "back",
+      "objectName": "Anterior root of spinal nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_femoral_cutaneous_nervel",
+      "nameLatin": "Posterior femoral cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Posterior femoral cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_root_of_posterior_femoral_cutaneous_nervel",
+      "nameLatin": "Anterior root of posterior femoral cutaneous nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Anterior root of posterior femoral cutaneous nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_subscapular_nervel",
+      "nameLatin": "Superior subscapular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Superior subscapular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_subscapular_nervel",
+      "nameLatin": "Inferior subscapular nerve.l",
+      "system": "nervous",
+      "region": "unknown",
+      "objectName": "Inferior subscapular nerve.l",
+      "glbFile": "nervous/nervous.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "parotid_ductl",
+      "nameLatin": "Parotid duct.l",
+      "system": "visceral",
+      "region": "head",
+      "objectName": "Parotid duct.l",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "parotid_ductr",
+      "nameLatin": "Parotid duct.r",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Parotid duct.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "submandibular_ductl",
+      "nameLatin": "Submandibular duct.l",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Submandibular duct.l",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "submandibular_ductr",
+      "nameLatin": "Submandibular duct.r",
+      "system": "visceral",
+      "region": "head",
+      "objectName": "Submandibular duct.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "oesophagus",
+      "nameLatin": "Oesophagus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Oesophagus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "jejunum",
+      "nameLatin": "Jejunum",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Jejunum",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "bile_duct",
+      "nameLatin": "Bile duct",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Bile duct",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "pancreatic_duct",
+      "nameLatin": "Pancreatic duct",
+      "system": "visceral",
+      "region": "abdomen",
+      "objectName": "Pancreatic duct",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "accessory_pancreatic_duct",
+      "nameLatin": "Accessory pancreatic duct",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Accessory pancreatic duct",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_segmental_bronchus_of_right_lung_bvi",
+      "nameLatin": "Superior segmental bronchus of right lung (BVI)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Superior segmental bronchus of right lung (BVI)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_segmental_bronchus_of_right_lung_biv",
+      "nameLatin": "Lateral segmental bronchus of right lung (BIV)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Lateral segmental bronchus of right lung (BIV)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "right_inferior_lobar_bronchus",
+      "nameLatin": "Right inferior lobar bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Right inferior lobar bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_basal_segmental_bronchus_of_right_lung_bx",
+      "nameLatin": "Posterior basal segmental bronchus of right lung (BX)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Posterior basal segmental bronchus of right lung (BX)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_basal_segmental_bronchus_of_right_lung_bvii",
+      "nameLatin": "Medial basal segmental bronchus of right lung (BVII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Medial basal segmental bronchus of right lung (BVII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_basal_segmental_bronchus_of_right_lung_bix",
+      "nameLatin": "Lateral basal segmental bronchus of right lung (BIX)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Lateral basal segmental bronchus of right lung (BIX)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_basal_segmental_bronchus_of_right_lung_bviii",
+      "nameLatin": "Anterior basal segmental bronchus of right lung (BVIII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Anterior basal segmental bronchus of right lung (BVIII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "left_superior_lobar_bronchus",
+      "nameLatin": "Left superior lobar bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Left superior lobar bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "apicoposterior_segmental_bronchus_of_left_lung_bi_bii",
+      "nameLatin": "Apicoposterior segmental bronchus of left lung (BI+BII)",
+      "system": "visceral",
+      "region": "thorax",
+      "objectName": "Apicoposterior segmental bronchus of left lung (BI+BII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_segmental_bronchus_of_left_lung_biii",
+      "nameLatin": "Anterior segmental bronchus of left lung (BIII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Anterior segmental bronchus of left lung (BIII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_lingular_segmental_bronchus_of_left_lung_biv",
+      "nameLatin": "Superior lingular segmental bronchus of left lung (BIV)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Superior lingular segmental bronchus of left lung (BIV)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "inferior_lingular_segmental_bronchus_of_left_lung_bv",
+      "nameLatin": "Inferior lingular segmental bronchus of left lung (BV)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Inferior lingular segmental bronchus of left lung (BV)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "superior_segmental_bronchus_of_left_lung_bvi",
+      "nameLatin": "Superior segmental bronchus of left lung (BVI)",
+      "system": "visceral",
+      "region": "thorax",
+      "objectName": "Superior segmental bronchus of left lung (BVI)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_basal_segmental_bronchus_of_left_lung_bvii",
+      "nameLatin": "Medial basal segmental bronchus of left lung (BVII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Medial basal segmental bronchus of left lung (BVII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_basal_segmental_bronchus_of_left_lung_bviii",
+      "nameLatin": "Anterior basal segmental bronchus of left lung (BVIII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Anterior basal segmental bronchus of left lung (BVIII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "left_inferior_lobar_bronchus",
+      "nameLatin": "Left inferior lobar bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Left inferior lobar bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "lateral_basal_segmental_bronchus_of_left_lung_bix",
+      "nameLatin": "Lateral basal segmental bronchus of left lung (BIX)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Lateral basal segmental bronchus of left lung (BIX)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "left_main_bronchus",
+      "nameLatin": "Left main bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Left main bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anterior_segmental_bronchus_of_right_lung_biii",
+      "nameLatin": "Anterior segmental bronchus of right lung (BIII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Anterior segmental bronchus of right lung (BIII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "apical_segmental_bronchus_of_right_lung_bi",
+      "nameLatin": "Apical segmental bronchus of right lung (BI)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Apical segmental bronchus of right lung (BI)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_segmental_bronchus_of_right_lung_bii",
+      "nameLatin": "Posterior segmental bronchus of right lung (BII)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Posterior segmental bronchus of right lung (BII)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "right_superior_lobar_bronchus",
+      "nameLatin": "Right superior lobar bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Right superior lobar bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "right_main_bronchus",
+      "nameLatin": "Right main bronchus",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Right main bronchus",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "urethra",
+      "nameLatin": "Urethra",
+      "system": "visceral",
+      "region": "pelvis",
+      "objectName": "Urethra",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ureterl",
+      "nameLatin": "Ureter.l",
+      "system": "visceral",
+      "region": "abdomen",
+      "objectName": "Ureter.l",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ureterr",
+      "nameLatin": "Ureter.r",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Ureter.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ductus_deferensl",
+      "nameLatin": "Ductus deferens.l",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Ductus deferens.l",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ductus_deferensr",
+      "nameLatin": "Ductus deferens.r",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Ductus deferens.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ejaculatory_ductl",
+      "nameLatin": "Ejaculatory duct.l",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Ejaculatory duct.l",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "ejaculatory_ductr",
+      "nameLatin": "Ejaculatory duct.r",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Ejaculatory duct.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "middle_lobar_bronchusr",
+      "nameLatin": "Middle lobar bronchus.r",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Middle lobar bronchus.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "intermediate_bronchusr",
+      "nameLatin": "Intermediate bronchus.r",
+      "system": "visceral",
+      "region": "neck",
+      "objectName": "Intermediate bronchus.r",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "medial_segmental_bronchus_of_right_lung_bv",
+      "nameLatin": "Medial segmental bronchus of right lung (BV)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Medial segmental bronchus of right lung (BV)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "posterior_basal_segmental_bronchus_of_left_lung_bx",
+      "nameLatin": "Posterior basal segmental bronchus of left lung (BX)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "Posterior basal segmental bronchus of left lung (BX)",
+      "glbFile": "visceral/visceral.glb",
+      "childrenIds": []
+    },
+    {
+      "id": "anteromedial_basal_segmental_bronchus_of_left_lung",
+      "nameLatin": "(Anteromedial basal segmental bronchus of left lung)",
+      "system": "visceral",
+      "region": "unknown",
+      "objectName": "(Anteromedial basal segmental bronchus of left lung)",
+      "glbFile": "visceral/visceral.glb",
       "childrenIds": []
     }
   ]
